@@ -19,10 +19,17 @@
 package org.goodoldai.jeff.report.pdf;
 
 import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Font;
+import com.lowagie.text.Paragraph;
+import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.goodoldai.jeff.explanation.Explanation;
 import org.goodoldai.jeff.explanation.ExplanationChunk;
 import org.goodoldai.jeff.explanation.ExplanationException;
@@ -63,7 +70,7 @@ public class PDFReportBuilder extends ReportBuilder {
      * report
      * @param filepath a string representing an URL for the file
      *
-     * @throws explanation.ExplanationException if any of the arguments are
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are
      * null or if filepath is an empty string
      */
     public void buildReport(Explanation explanation, String filepath) {
@@ -106,7 +113,7 @@ public class PDFReportBuilder extends ReportBuilder {
      * @param stream output stream to which the report is to be written -
      * java.io.OutputStream or any of its subclasses
      *
-     * @throws explanation.ExplanationException if any of the arguments are null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are null
      * or if the entered stream is not java.io.OutputStream or any of its
      * subclasses
      */
@@ -129,11 +136,11 @@ public class PDFReportBuilder extends ReportBuilder {
         try {
             PdfWriter.getInstance(doc, (OutputStream) (stream));
 
-            //Insert header into the report
-            insertHeader(explanation, doc);
-
             //Open PDF document
             doc.open();
+
+            //Insert header into the report
+            insertHeader(explanation, doc);
         } catch (Exception e) {
             throw new ExplanationException(e.getMessage());
         }
@@ -150,7 +157,7 @@ public class PDFReportBuilder extends ReportBuilder {
             ReportChunkBuilder cbuilder = factory.getReportChunkBuilder(chunk);
 
             //Transform chunk and insert it into the report
-            cbuilder.buildReportChunk(chunk, doc);
+            cbuilder.buildReportChunk(chunk, doc, isInsertChunkHeaders());
         }
 
         //Close the PDF document
@@ -161,7 +168,7 @@ public class PDFReportBuilder extends ReportBuilder {
     /**
      * This method inserts the header into the PDF report. The header consists 
      * of general data collected from the explanation (date and time created, 
-     * owner, language and country). If any of this data is missing, it is not 
+     * owner, title, language and country). If any of this data is missing, it is not
      * inserted into the report. Since the report format is PDF, the provided 
      * stream should be an instance of com.lowagie.text.Document.
      * 
@@ -170,7 +177,7 @@ public class PDFReportBuilder extends ReportBuilder {
      * @param stream output stream that the header is supposed to be inserted
      * into
      * 
-     * @throws explanation.ExplanationException if any of the arguments are
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are
      * null or if the entered output stream type is not com.lowagie.text.Document
      */
     protected void insertHeader(Explanation explanation, Object stream) {
@@ -189,10 +196,24 @@ public class PDFReportBuilder extends ReportBuilder {
         Document doc = (Document) stream;
 
         String owner = explanation.getOwner();
+        String title = explanation.getTitle();
 
         doc.addCreator("JEFF (Java Explanation Facility Framework)");
         doc.addAuthor(owner + " [OWNER]");
         doc.addCreationDate();
+        
+        if (title != null){
+            try {
+                Phrase p = new Phrase(title, new Font(Font.HELVETICA, 16));
+                Paragraph pa = new Paragraph(p);
+                pa.setSpacingBefore(10);
+                pa.setSpacingAfter(30);
+                pa.setAlignment(Element.ALIGN_CENTER);
+                doc.add(pa);
+            } catch (DocumentException ex) {
+                throw new ExplanationException(ex.getMessage());
+            }
+        }
 
     }
 }

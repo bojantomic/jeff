@@ -106,7 +106,7 @@ public class PDFDataChunkBuilderTest extends TestCase {
     public void testBuildReportChunkNullChunk() {
 
         try {
-            instance.buildReportChunk(null, doc);
+            instance.buildReportChunk(null, doc, false);
             fail("An exception should have been thrown but wasn't");
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
@@ -123,7 +123,7 @@ public class PDFDataChunkBuilderTest extends TestCase {
     public void testBuildReportChunkNullStream() {
 
         try {
-            instance.buildReportChunk(dchunk, null);
+            instance.buildReportChunk(dchunk, null, false);
             fail("An exception should have been thrown but wasn't");
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
@@ -142,7 +142,7 @@ public class PDFDataChunkBuilderTest extends TestCase {
                 new TextExplanationChunk("Sample text");
 
         try {
-            instance.buildReportChunk(tchunk, doc);
+            instance.buildReportChunk(tchunk, doc, false);
             fail("An exception should have been thrown but wasn't");
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
@@ -159,7 +159,7 @@ public class PDFDataChunkBuilderTest extends TestCase {
     public void testBuildReportChunkWrongTypeStream() {
 
         try {
-            instance.buildReportChunk(dchunk, new Object());
+            instance.buildReportChunk(dchunk, new Object(), false);
             fail("An exception should have been thrown but wasn't");
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
@@ -174,7 +174,7 @@ public class PDFDataChunkBuilderTest extends TestCase {
      * Test case: successfull execution - single data content
      */
     public void testBuildReportChunkSuccessfull1() {
-        instance.buildReportChunk(dchunk, doc);
+        instance.buildReportChunk(dchunk, doc, true);
 
         ArrayList<Object[]> events = docListener.getCapturedEvents();
 
@@ -209,7 +209,7 @@ public class PDFDataChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkSuccessfull2() {
         dchunk.setContent(odata);
-        instance.buildReportChunk(dchunk, doc);
+        instance.buildReportChunk(dchunk, doc, true);
 
         ArrayList<Object[]> events = docListener.getCapturedEvents();
 
@@ -244,7 +244,7 @@ public class PDFDataChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkSuccessfull3() {
         dchunk.setContent(twdata);
-        instance.buildReportChunk(dchunk, doc);
+        instance.buildReportChunk(dchunk, doc, true);
 
         ArrayList<Object[]> events = docListener.getCapturedEvents();
 
@@ -279,7 +279,7 @@ public class PDFDataChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkSuccessfull4() {
         dchunk.setContent(thdata);
-        instance.buildReportChunk(dchunk, doc);
+        instance.buildReportChunk(dchunk, doc, true);
 
         ArrayList<Object[]> events = docListener.getCapturedEvents();
 
@@ -304,6 +304,26 @@ public class PDFDataChunkBuilderTest extends TestCase {
 
         //Check the fifth event - chunk content (ThreeDimData) added as PdfPTable
         event = events.get(4);
+        confirmPdfPTableAdded(event, thdata);
+
+    }
+
+    /**
+     * Test of buildReportChunk method, of class PDFDataChunkBuilder.
+     * Test case: successfull execution - three dim data content but no chunk
+     * headers inserted
+     */
+    public void testBuildReportChunkSuccessfull5() {
+        dchunk.setContent(thdata);
+        instance.buildReportChunk(dchunk, doc, false);
+
+        ArrayList<Object[]> events = docListener.getCapturedEvents();
+
+        //Check that there has been 1 element added - 1 event
+        assertTrue(events.size() == 1);
+
+        //Check the first event - chunk content (ThreeDimData) added as PdfPTable
+        Object[] event = events.get(0);
         confirmPdfPTableAdded(event, thdata);
 
     }

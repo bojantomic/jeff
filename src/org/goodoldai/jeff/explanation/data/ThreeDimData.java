@@ -19,6 +19,7 @@
 package org.goodoldai.jeff.explanation.data;
 
 import java.util.ArrayList;
+import org.goodoldai.jeff.explanation.ExplanationException;
 
 /**
  * This class represents a three-dimensional array of data like
@@ -65,11 +66,12 @@ public class ThreeDimData {
      * 
      * @param val Dimension object related to this data
      *
-     * @throws explanation.ExplanationException if the entered object is null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
+     * if the entered object is null
      */
     public void setDimension1(Dimension val) {
         if (val == null) {
-            throw new org.goodoldai.jeff.explanation.ExplanationException("You have to set dimensions related to this data");
+            throw new ExplanationException("You have to set dimensions related to this data");
         }
         this.dimension1 = val;
     }
@@ -88,11 +90,12 @@ public class ThreeDimData {
      * 
      * @param val Dimension object related to this data
      *
-     * @throws explanation.ExplanationException if the entered object is null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
+     * if the entered object is null
      */
     public void setDimension2(Dimension val) {
         if (val == null) {
-            throw new org.goodoldai.jeff.explanation.ExplanationException("You have to set dimensions related to this data");
+            throw new ExplanationException("You have to set dimensions related to this data");
         }
         this.dimension2 = val;
     }
@@ -111,11 +114,12 @@ public class ThreeDimData {
      * 
      * @param val Dimension object related to this data
      *
-     * @throws explanation.ExplanationException if the entered object is null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
+     * if the entered object is null
      */
     public void setDimension3(Dimension val) {
         if (val == null) {
-            throw new org.goodoldai.jeff.explanation.ExplanationException("You have to set dimensions related to this data");
+            throw new ExplanationException("You have to set dimensions related to this data");
         }
         this.dimension3 = val;
     }
@@ -134,7 +138,7 @@ public class ThreeDimData {
      *
      * @param val array of triples containing data values
      * 
-     * @throws explanation.ExplanationException if the
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the
      * entered array is empty, null, or if Triple members are not
      * from the same type. This means that all Triples in the array must
      * have first members from the same type, second members from the
@@ -147,7 +151,7 @@ public class ThreeDimData {
      */
     public void setValues(ArrayList<Triple> val) {
         if (val == null || val.isEmpty()) {
-            throw new org.goodoldai.jeff.explanation.ExplanationException("You have to set an array of objects containing data values");
+            throw new ExplanationException("You have to set an array of objects containing data values");
         }
 
         //Checking if the first Triple members are from the same type,
@@ -157,7 +161,7 @@ public class ThreeDimData {
             if ((!val.get(0).getValue1().getClass().getName().equals(val.get(i).getValue1().getClass().getName())) ||
                     (!val.get(0).getValue2().getClass().getName().equals(val.get(i).getValue2().getClass().getName()))||
                     (!val.get(0).getValue3().getClass().getName().equals(val.get(i).getValue3().getClass().getName()))) {
-                throw new org.goodoldai.jeff.explanation.ExplanationException("The entered Triple members  must be from the same type");
+                throw new ExplanationException("The entered Triple members  must be from the same type");
             }
         }
         this.values = val;

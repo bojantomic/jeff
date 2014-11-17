@@ -59,8 +59,18 @@ public class DefaultExplanationBuilder extends ExplanationBuilder {
 
         //Initialize the internationalization manager to be used by
         //explanation chunk builders
-        InternationalizationManager.initializeManager(
+        InternationalizationManager i18nManager = new InternationalizationManager(
                 new Locale(language, country));
+
+        //Translate the explanation title if it is present
+        if (e.getTitle() != null && !e.getTitle().isEmpty())
+            e.setTitle(i18nManager.translateImageCaption(e.getTitle()));
+
+        //Pass the initialized i18nManager to the factory
+        DefaultExplanationChunkBuilderFactory decf =
+                (DefaultExplanationChunkBuilderFactory)factory;
+
+        decf.setI18nManager(i18nManager);
     }
 
     /**

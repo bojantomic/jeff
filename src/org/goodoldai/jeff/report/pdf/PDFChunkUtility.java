@@ -104,7 +104,7 @@ class PDFChunkUtility {
      *
      * @return context translation
      *
-     * @throws explanation.ExplanationException if the entered chunk is null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the entered chunk is null
      */
     static String translateContext(ExplanationChunk echunk) {
         if (echunk == null) {

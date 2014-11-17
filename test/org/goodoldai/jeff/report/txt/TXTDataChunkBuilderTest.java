@@ -92,9 +92,13 @@ public class TXTDataChunkBuilderTest extends TestCase {
     }
 
     @Override
-    protected void tearDown() {
+    protected void tearDown() throws IOException {
+
+        pw.close();
+        br.close();
 
         instance = null;
+        new File("tekst.txt").delete();
 
         singleDataChunk = null;
         oneDimDataChunk = null;
@@ -110,7 +114,7 @@ public class TXTDataChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkAllNullArguments() {
         try {
-            instance.buildReportChunk(null, null);
+            instance.buildReportChunk(null, null, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -126,7 +130,7 @@ public class TXTDataChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkMissingFirstArgumant() {
         try {
-            instance.buildReportChunk(null, pw);
+            instance.buildReportChunk(null, pw, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -142,7 +146,7 @@ public class TXTDataChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkMissingSecondArgumant() {
         try {
-            instance.buildReportChunk(singleDataChunk, null);
+            instance.buildReportChunk(singleDataChunk, null, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -159,7 +163,7 @@ public class TXTDataChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkWrongTypeFirsArgumant() {
         try {
-            instance.buildReportChunk(new TextExplanationChunk("test"), pw);
+            instance.buildReportChunk(new TextExplanationChunk("test"), pw, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -176,7 +180,7 @@ public class TXTDataChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkWrongTypeSecondArgumant() {
         try {
-            instance.buildReportChunk(singleDataChunk, "test");
+            instance.buildReportChunk(singleDataChunk, "test", false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -192,7 +196,7 @@ public class TXTDataChunkBuilderTest extends TestCase {
      * that has only content and the type is SingleDimDataChunk.
      */
     public void testBuildReportChunkFirsttConstructorSingleData() throws IOException {
-        instance.buildReportChunk(singleDataChunk1, pw);
+        instance.buildReportChunk(singleDataChunk1, pw, true);
         pw.close();
 
         pw.close();
@@ -200,14 +204,14 @@ public class TXTDataChunkBuilderTest extends TestCase {
         //checks if the file is created
         assertTrue(new File("tekst.txt").exists());
 
-        //skips the lines in document that are tested else were
-        br.readLine();
+        //skips the lines in document that are tested elsewhere
         br.readLine();
         
         //checks the content
         assertEquals("testName", br.readLine());
         assertEquals("-------------------", br.readLine());
         assertEquals("value", br.readLine());
+        assertEquals("", br.readLine());
 
         //checks if anyting eles has been writen to file by mistake
         assertEquals(null, br.readLine());
@@ -219,7 +223,7 @@ public class TXTDataChunkBuilderTest extends TestCase {
      * that has all elements and the type is SingleDimDataChunk.
      */
     public void testBuildReportChunkFirsttConstructorSingleDataAllData() throws IOException {
-        instance.buildReportChunk(singleDataChunk, pw);
+        instance.buildReportChunk(singleDataChunk, pw, true);
         pw.close();
 
         pw.close();
@@ -232,11 +236,36 @@ public class TXTDataChunkBuilderTest extends TestCase {
         br.readLine();
         br.readLine();
         br.readLine();
+         
+        //checks the content
+        assertEquals("testName [testUnit]", br.readLine());
+        assertEquals("-------------------", br.readLine());
+        assertEquals("value", br.readLine());
+        assertEquals("", br.readLine());
+
+        //checks if anyting eles has been writen to file by mistake
+        assertEquals(null, br.readLine());
+    }
+
+    /**
+     * Test of buildReportChunk method, of class TXTDataChunkBuilder.
+     * Test case: successful insertion of data using the ExplanationChunk constructor
+     * that has all elements and the type is SingleDimDataChunk, but with no headers.
+     */
+    public void testBuildReportChunkFirsttConstructorSingleDataAllDataNoHeaders() throws IOException {
+        instance.buildReportChunk(singleDataChunk, pw, false);
+        pw.close();
+
+        pw.close();
+
+        //checks if the file is created
+        assertTrue(new File("tekst.txt").exists());
 
         //checks the content
         assertEquals("testName [testUnit]", br.readLine());
         assertEquals("-------------------", br.readLine());
         assertEquals("value", br.readLine());
+        assertEquals("", br.readLine());
 
         //checks if anyting eles has been writen to file by mistake
         assertEquals(null, br.readLine());
@@ -248,7 +277,7 @@ public class TXTDataChunkBuilderTest extends TestCase {
      * that has all elements and the type is OneDimDataChunk.
      */
     public void testBuildReportChunkSecondConstructorOneDimData() throws IOException {
-        instance.buildReportChunk(oneDimDataChunk, pw);
+        instance.buildReportChunk(oneDimDataChunk, pw, true);
         pw.close();
 
         pw.close();
@@ -261,24 +290,25 @@ public class TXTDataChunkBuilderTest extends TestCase {
         br.readLine();
         br.readLine();
         br.readLine();
-
+        
         //checks the content
         assertEquals("testName [testUnit]", br.readLine());
         assertEquals("-------------------", br.readLine());
         assertEquals("value1", br.readLine());
         assertEquals("value2", br.readLine());
+        assertEquals("", br.readLine());
 
-        //checks if anyting eles has been writen to file by mistake
+        //checks if anyting else has been writen to file by mistake
         assertEquals(null, br.readLine());
     }
 
-     /**
+    /**
      * Test of buildReportChunk method, of class TXTDataChunkBuilder.
      * Test case: successful insertion of data using the ExplanationChunk constructor
      * that has all elements and the type is TwoDimDataChunk.
      */
     public void testBuildReportChunkSecondConstructorTwoDimData() throws IOException {
-        instance.buildReportChunk(twoDimDataChunk, pw);
+        instance.buildReportChunk(twoDimDataChunk, pw, true);
         pw.close();
 
         pw.close();
@@ -291,11 +321,12 @@ public class TXTDataChunkBuilderTest extends TestCase {
         br.readLine();
         br.readLine();
         br.readLine();
-
+        
         //checks the content
         assertEquals("testName1 [testUnit1]       testName2 [testUnit2]", br.readLine());
         assertEquals("-------------------", br.readLine());
         assertEquals("value1       value2", br.readLine());
+        assertEquals("", br.readLine());
 
         //checks if anyting eles has been writen to file by mistake
         assertEquals(null, br.readLine());
@@ -307,7 +338,7 @@ public class TXTDataChunkBuilderTest extends TestCase {
      * that has all elements and the type is ThreeDimDataChunk.
      */
     public void testBuildReportChunkSecondConstructorThreeDimData() throws IOException {
-        instance.buildReportChunk(threeDimDataChunk, pw);
+        instance.buildReportChunk(threeDimDataChunk, pw, true);
         pw.close();
 
         pw.close();
@@ -320,12 +351,13 @@ public class TXTDataChunkBuilderTest extends TestCase {
         br.readLine();
         br.readLine();
         br.readLine();
-
+        
         //checks the content
         assertEquals("testName1 [testUnit1]       testName2 [testUnit2]       testName3 [testUnit3]", br.readLine());
         assertEquals("-------------------", br.readLine());
         assertEquals("value1       value2       value3", br.readLine());
         assertEquals("value4       value5       value6", br.readLine());
+        assertEquals("", br.readLine());
 
         //checks if anyting eles has been writen to file by mistake
         assertEquals(null, br.readLine());

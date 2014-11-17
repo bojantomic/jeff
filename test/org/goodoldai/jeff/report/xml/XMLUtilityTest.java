@@ -29,7 +29,7 @@ import org.dom4j.Element;
 /**
  * @author Boris Horvat
  */
-public class XMLUtiltyTest extends TestCase {
+public class XMLUtilityTest extends TestCase {
 
     TextExplanationChunk textEchunk1;
     TextExplanationChunk textEchunk2;

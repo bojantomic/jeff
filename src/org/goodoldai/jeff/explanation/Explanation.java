@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * session.
  * 
  * Each explanation has some attributes that identify it: owner, date and 
- * time created, language and country. The last two are used for translating
+ * time created, title, language and country. The last two are used for translating
  * the explanation into the appropriate language for the desired country
  * and are optional.
  * 
@@ -59,42 +59,67 @@ public class Explanation {
      */
     private String country;
     /**
+     * Explanation title.
+     */
+    private String title;
+    /**
      * A list of chunks representing different parts of the explanation.
      */
     private ArrayList<ExplanationChunk> chunks;
 
     /**
      * This constructor sets the "created" attribute to the current date and
-     * time. All other attributes are set to null.
+     * time and initializes the chunk list. All other attributes are set to null.
      */
     public Explanation() {
         this.created = new java.util.GregorianCalendar();
         this.language = null;
         this.country = null;
         this.owner = null;
+        this.title = null;
         this.chunks = new ArrayList<ExplanationChunk>();
     }
 
     /**
      * This constructor sets the "created" attribute to the current date and
-     * time, and all other attributes to argument values.
+     * time, initializes the chunk list and sets all other attributes to
+     * argument values.
      * 
      * @param owner explanation owner
      * @param language explanation language
      * @param country explanation country
+     * @param title explanation title
      */
-    public Explanation(String owner, String language, String country) {
+    public Explanation(String owner, String language, String country, String title) {
         this.created = new java.util.GregorianCalendar();
         this.language = language;
         this.country = country;
         this.owner = owner;
+        this.title = title;
         this.chunks = new ArrayList<ExplanationChunk>();
     }
 
     /**
      * This constructor sets the "created" attribute to the current date and
-     * time. Also, the "owner" attribute is set to argument value. All other
-     * attributes are set to null.
+     * time and initializes the chunk list. Also, the "owner" and "title"
+     * attributes are set to argument values.All other attributes are set to null.
+     *
+     * @param owner explanation owner
+     * @param title explanation title
+     */
+    public Explanation(String owner, String title) {
+        this.created = new java.util.GregorianCalendar();
+        this.language = null;
+        this.country = null;
+        this.owner = owner;
+        this.title = title;
+        this.chunks = new ArrayList<ExplanationChunk>();
+    }
+
+    /**
+     * This constructor sets the "created" attribute to the current date and
+     * time and initializes the chunk list. Also, the "owner" attribute is set
+     * to argument value. All other attributes are set to null.
      *
      * @param owner explanation owner
      */
@@ -103,6 +128,7 @@ public class Explanation {
         this.language = null;
         this.country = null;
         this.owner = owner;
+        this.title = null;
         this.chunks = new ArrayList<ExplanationChunk>();
     }
 
@@ -130,7 +156,7 @@ public class Explanation {
      * @param chunk
      * the chunk to be added to the chunks list.
      * 
-     * @throws explanation.ExplanationException
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
      * if the chunk is null.
      */
     public void addChunk(ExplanationChunk chunk) {
@@ -184,6 +210,25 @@ public class Explanation {
      */
     public String getOwner() {
         return owner;
+    }
+
+    /**
+     * Returns the explanation title
+     *
+     * @return string repesenting the explanation title or
+     * null if the title is not specified
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * Sets the explanation title
+     *
+     * @param title string repesenting the desired explanation title
+     */
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
 

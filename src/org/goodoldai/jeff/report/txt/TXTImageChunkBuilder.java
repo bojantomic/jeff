@@ -53,12 +53,14 @@ public class TXTImageChunkBuilder implements ReportChunkBuilder {
      * @param echunk image explanation chunk that needs to be transformed
      * @param stream output stream to which the transformed chunk will
      * be written as output (in this case java.io.PrintWriter)
+     * @param insertHeaders denotes if chunk headers should be inserted into the
+     * report (true) or not (false)
      *
-     * @throws explanation.ExplanationException if any of the arguments are
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are
      * null, if the entered chunk is not an ImageExplanationChunk instance or 
      * if the entered output stream type is not java.io.PrintWriter
      */
-    public void buildReportChunk(ExplanationChunk echunk, Object stream) {
+    public void buildReportChunk(ExplanationChunk echunk, Object stream, boolean insertHeaders) {
         
         if (echunk == null && stream == null) {
             throw new ExplanationException("All of the arguments are mandatory, so they can not be null");
@@ -83,7 +85,8 @@ public class TXTImageChunkBuilder implements ReportChunkBuilder {
         ImageExplanationChunk chunk = (ImageExplanationChunk) echunk;
         PrintWriter writer = (PrintWriter) stream;
 
-        TXTUtility.insertExplenationInfo(echunk, writer);
+        if (insertHeaders)
+            TXTChunkUtility.insertExplanationInfo(echunk, writer);
 
         insertContent(chunk, writer);
 
@@ -105,10 +108,10 @@ public class TXTImageChunkBuilder implements ReportChunkBuilder {
         String caption = content.getCaption();
 
         if (caption != null) {
-            writer.write("\nCaption is: " + caption + "\n");
+            writer.write("Caption is: " + caption + "\n");
         }
 
-        writer.write("The path to this image is: " + url);
+        writer.write("The path to this image is: " + url+ "\n" + "\n");
     }
 }
 

@@ -18,12 +18,82 @@
  */
 package org.goodoldai.jeff.explanation.builder;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.Locale;
 import junit.framework.TestCase;
+import org.goodoldai.jeff.explanation.builder.internationalization.InternationalizationManager;
 
 /**
  * @author Bojan Tomic
  */
 public class DefaultExplanationChunkBuilderFactoryTest extends TestCase {
+
+    File unit = null;
+    File dimensionNames = null;
+    File imageCaptions = null;
+
+    InternationalizationManager im = null;
+    DefaultExplanationChunkBuilderFactory instance = null;
+    
+    @Override
+    protected void setUp() throws Exception {
+        //Create a sample units file with some sample data
+        unit = new File("test" + File.separator + "units_srb_RS.properties");
+        PrintWriter unitpw = new PrintWriter(new FileWriter(unit));
+        unitpw.println("EUR = RSD");
+        unitpw.close();
+
+        //Create a sample dimension names file with some sample data
+        dimensionNames = new File("test" + File.separator + "dimension_names_srb_RS.properties");
+        PrintWriter dimnamespw = new PrintWriter(new FileWriter(dimensionNames));
+        dimnamespw.println("distance = razdaljina");
+        dimnamespw.println("money = novac");
+        dimnamespw.println("profit = dobit (profit)");
+        dimnamespw.close();
+
+        //Create a sample image captions file with some sample data
+        imageCaptions = new File("test" + File.separator + "image_captions_srb_RS.properties");
+        PrintWriter imagecaptpw = new PrintWriter(new FileWriter(imageCaptions));
+        imagecaptpw.println("Whale\\ photo = Fotografija kita");
+        imagecaptpw.println("Image\\ 1 = Slika 1");
+        imagecaptpw.close();
+
+        //The internationalization manager needs to be initialized before
+        //explanation builders can use it
+        im = new InternationalizationManager(new Locale("srb", "RS"));
+
+        //Initialize the factory instance
+        instance = new DefaultExplanationChunkBuilderFactory();
+
+        instance.setI18nManager(im);
+
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        unit.delete();
+        dimensionNames.delete();
+        imageCaptions.delete();
+    }
+
+    /**
+     * Test of setI18nManager method, of class DefaultExplanationChunkBuilderFactory.
+     * Test case: unsuccessfull execution - i18nManager is set to null
+     */
+    public void testSetI18nManagerNull() {
+        
+        try {
+            instance.setI18nManager(null);
+            fail("Exception should have been thrown, but it wasn't");
+        } catch (Exception e) {
+            String result = e.getMessage();
+            String expResult = "The i18nManager cannot be null";
+            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
+            assertEquals(expResult, result);
+        }
+    }
 
     /**
      * Test of getExplanationChunkBuilder method, of class DefaultExplanationChunkBuilderFactory.
@@ -31,8 +101,7 @@ public class DefaultExplanationChunkBuilderFactoryTest extends TestCase {
      */
     public void testGetExplanationChunkBuilderChunkTypeNotRecognized() {
         int type = -555;
-        DefaultExplanationChunkBuilderFactory instance = new DefaultExplanationChunkBuilderFactory();
-
+        
         try {
             instance.getExplanationChunkBuilder(type);
             fail("Exception should have been thrown, but it wasn't");
@@ -46,14 +115,32 @@ public class DefaultExplanationChunkBuilderFactoryTest extends TestCase {
 
     /**
      * Test of getExplanationChunkBuilder method, of class DefaultExplanationChunkBuilderFactory.
+     * Test case: unsuccessfull execution - i18nManager not initialized
+     */
+    public void testGetExplanationChunkBuilderi18nManagerNotInitialized() {
+        instance = new DefaultExplanationChunkBuilderFactory();
+        int type = ExplanationChunkBuilderFactory.TEXT;
+
+        try {
+            instance.getExplanationChunkBuilder(type);
+            fail("Exception should have been thrown, but it wasn't");
+        } catch (Exception e) {
+            String result = e.getMessage();
+            String expResult = "The i18nManager has not been set";
+            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
+            assertEquals(expResult, result);
+        }
+    }
+
+    /**
+     * Test of getExplanationChunkBuilder method, of class DefaultExplanationChunkBuilderFactory.
      * Test case: successfull execution TEXT chunk type
      */
     public void testGetExplanationChunkBuilderText1() {
         int type = ExplanationChunkBuilderFactory.TEXT;
-        DefaultExplanationChunkBuilderFactory instance = new DefaultExplanationChunkBuilderFactory();
         ExplanationChunkBuilder result = instance.getExplanationChunkBuilder(type);
 
-        assertTrue(result instanceof TextExplanationChunkBuilder);
+        assertTrue(result instanceof DefaultTextExplanationChunkBuilder);
     }
 
     /**
@@ -63,12 +150,12 @@ public class DefaultExplanationChunkBuilderFactoryTest extends TestCase {
      */
     public void testGetExplanationChunkBuilderText2() {
         int type = ExplanationChunkBuilderFactory.TEXT;
-        DefaultExplanationChunkBuilderFactory instance = new DefaultExplanationChunkBuilderFactory();
+
         ExplanationChunkBuilder result1 = instance.getExplanationChunkBuilder(type);
         ExplanationChunkBuilder result2 = instance.getExplanationChunkBuilder(type);
 
-        assertTrue(result1 instanceof TextExplanationChunkBuilder);
-        assertTrue(result2 instanceof TextExplanationChunkBuilder);
+        assertTrue(result1 instanceof DefaultTextExplanationChunkBuilder);
+        assertTrue(result2 instanceof DefaultTextExplanationChunkBuilder);
 
         //Assert that the same builder instance is returned every time
         assertEquals(result1, result2);
@@ -80,10 +167,10 @@ public class DefaultExplanationChunkBuilderFactoryTest extends TestCase {
      */
     public void testGetExplanationChunkBuilderImage1() {
         int type = ExplanationChunkBuilderFactory.IMAGE;
-        DefaultExplanationChunkBuilderFactory instance = new DefaultExplanationChunkBuilderFactory();
+
         ExplanationChunkBuilder result = instance.getExplanationChunkBuilder(type);
 
-        assertTrue(result instanceof ImageExplanationChunkBuilder);
+        assertTrue(result instanceof DefaultImageExplanationChunkBuilder);
     }
 
     /**
@@ -93,12 +180,12 @@ public class DefaultExplanationChunkBuilderFactoryTest extends TestCase {
      */
     public void testGetExplanationChunkBuilderImage2() {
         int type = ExplanationChunkBuilderFactory.IMAGE;
-        DefaultExplanationChunkBuilderFactory instance = new DefaultExplanationChunkBuilderFactory();
+
         ExplanationChunkBuilder result1 = instance.getExplanationChunkBuilder(type);
         ExplanationChunkBuilder result2 = instance.getExplanationChunkBuilder(type);
 
-        assertTrue(result1 instanceof ImageExplanationChunkBuilder);
-        assertTrue(result2 instanceof ImageExplanationChunkBuilder);
+        assertTrue(result1 instanceof DefaultImageExplanationChunkBuilder);
+        assertTrue(result2 instanceof DefaultImageExplanationChunkBuilder);
 
         //Assert that the same builder instance is returned every time
         assertEquals(result1, result2);
@@ -110,10 +197,10 @@ public class DefaultExplanationChunkBuilderFactoryTest extends TestCase {
      */
     public void testGetExplanationChunkBuilderData1() {
         int type = ExplanationChunkBuilderFactory.DATA;
-        DefaultExplanationChunkBuilderFactory instance = new DefaultExplanationChunkBuilderFactory();
+
         ExplanationChunkBuilder result = instance.getExplanationChunkBuilder(type);
 
-        assertTrue(result instanceof DataExplanationChunkBuilder);
+        assertTrue(result instanceof DefaultDataExplanationChunkBuilder);
     }
 
     /**
@@ -123,12 +210,12 @@ public class DefaultExplanationChunkBuilderFactoryTest extends TestCase {
      */
     public void testGetExplanationChunkBuilderData2() {
         int type = ExplanationChunkBuilderFactory.DATA;
-        DefaultExplanationChunkBuilderFactory instance = new DefaultExplanationChunkBuilderFactory();
+
         ExplanationChunkBuilder result1 = instance.getExplanationChunkBuilder(type);
         ExplanationChunkBuilder result2 = instance.getExplanationChunkBuilder(type);
 
-        assertTrue(result1 instanceof DataExplanationChunkBuilder);
-        assertTrue(result2 instanceof DataExplanationChunkBuilder);
+        assertTrue(result1 instanceof DefaultDataExplanationChunkBuilder);
+        assertTrue(result2 instanceof DefaultDataExplanationChunkBuilder);
 
         //Assert that the same builder instance is returned every time
         assertEquals(result1, result2);

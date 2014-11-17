@@ -31,35 +31,46 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import junit.framework.TestCase;
+import java.text.DateFormat;
+import org.goodoldai.jeff.report.ReportBuilder;
+import org.goodoldai.jeff.report.ReportBuilderTest;
+import org.goodoldai.jeff.report.ReportChunkBuilderFactory;
 
 /**
  *
  * @author Nemanja Jovanovic
  */
-public class TXTReportBuilderTest extends TestCase {
+public class TXTReportBuilderTest extends ReportBuilderTest {
 
-    TXTReportBuilder instance;
     Explanation explanation1;
     Explanation explanation2;
     Explanation explanation3;
     PrintWriter pw;
     BufferedReader br;
 
+    @Override
+    public ReportBuilder getInstance(ReportChunkBuilderFactory factory) {
+        return new TXTReportBuilder(factory);
+    }
+
+    @Override
+    public ReportChunkBuilderFactory getFactory() {
+        return new TXTReportChunkBuilderFactory();
+    }
     /**
      * Creates a explanation.TextExplanationChunk, explanation.ImageExplanationChunk,
      * explanation.DataExplanationChunk, and org.dom4j.Document instances that are
      * used for testing
      */
     @Override
-    protected void setUp() throws FileNotFoundException {
+    protected void setUp() {
 
-        instance = new TXTReportBuilder(new TXTReportChunkBuilderFactory());
+        instance = getInstance(getFactory());
 
         explanation3 = new Explanation();
         explanation1 = new Explanation("tester");
 
-        explanation2 = new Explanation("tester", "EN", "USA");
+        explanation2 = new Explanation("tester", "EN", "USA", "Explanation title");
         explanation2.addChunk(new TextExplanationChunk("textTest"));
         explanation2.addChunk(new ImageExplanationChunk(new ImageData("imgTest.jpg")));
 
@@ -67,13 +78,22 @@ public class TXTReportBuilderTest extends TestCase {
         explanation2.addChunk(new DataExplanationChunk(-10, "testGroup", "testRule", tags,
                 new SingleData(new Dimension("testName", "testUnit"), "value")));
 
-        pw = new PrintWriter(new File("text.txt"));
-        br = new BufferedReader(new FileReader("text.txt"));
+        try{
+            pw = new PrintWriter(new File("text.txt"));
+            br = new BufferedReader(new FileReader("text.txt"));
+        }catch(Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
 
     }
 
     @Override
-    protected void tearDown() {
+    protected void tearDown() throws IOException{
+        instance = null;
+
+        pw.close();
+        br.close();
+
         new File("text.txt").delete();
     }
 
@@ -83,7 +103,7 @@ public class TXTReportBuilderTest extends TestCase {
      */
     public void testInsertHeaderAllNullArguments() {
         try {
-            instance.insertHeader(null, null);
+            ((TXTReportBuilder)instance).insertHeader(null, null);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -97,9 +117,9 @@ public class TXTReportBuilderTest extends TestCase {
      * Test of insertHeader method, of class TXTReportBuilder.
      * Test case: unsuccessful building of a chunk because of the first null argument
      */
-    public void testInsertHeaderMissingFirstArgumant() {
+    public void testInsertHeaderMissingFirstArgument() {
         try {
-            instance.insertHeader(null, pw);
+            ((TXTReportBuilder)instance).insertHeader(null, pw);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -113,9 +133,9 @@ public class TXTReportBuilderTest extends TestCase {
      * Test of insertHeader method, of class TXTReportBuilder.
      * Test case: unsuccessful building of a chunk because of the second null argument
      */
-    public void testInsertHeaderMissingSecondArgumant() {
+    public void testInsertHeaderMissingSecondArgument() {
         try {
-            instance.insertHeader(explanation1, null);
+            ((TXTReportBuilder)instance).insertHeader(explanation1, null);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -130,9 +150,9 @@ public class TXTReportBuilderTest extends TestCase {
      * Test case: unsuccessful building of a chunk because of the wrong
      * type of the second argument
      */
-    public void testInsertHeaderWrongTypeSecondArgumant() {
+    public void testInsertHeaderWrongTypeSecondArgument() {
         try {
-            instance.insertHeader(explanation1, "test");
+            ((TXTReportBuilder)instance).insertHeader(explanation1, "test");
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -148,19 +168,22 @@ public class TXTReportBuilderTest extends TestCase {
      * that has all elements.
      */
     public void testInsertHeader1() throws FileNotFoundException, IOException, IOException {
-        instance.insertHeader(explanation2, pw);
+        ((TXTReportBuilder)instance).insertHeader(explanation2, pw);
         pw.close();
 
         //checks if the file is created
         assertTrue(new File("text.txt").exists());
 
         //checks the data
-        assertEquals("Creation date: " + Long.toString(explanation2.getCreated().getTimeInMillis()), br.readLine());
+        assertEquals("Creation date: " + DateFormat.getInstance().format(explanation2.getCreated().getTime()), br.readLine());
         assertEquals("Report owner is: tester", br.readLine());
-        assertEquals("The language on wich report is created in is: EN", br.readLine());
+        assertEquals("The language used: EN", br.readLine());
         assertEquals("The country is: USA", br.readLine());
+        assertEquals("", br.readLine());
+        assertEquals("Explanation title", br.readLine());
+        assertEquals("", br.readLine());
 
-        //checks if anyting eles has been writen to file by mistake
+        //checks if anyting else has been writen to file by mistake
         assertEquals(null, br.readLine());
 
     }
@@ -171,17 +194,18 @@ public class TXTReportBuilderTest extends TestCase {
      * that only one argument.
      */
     public void testInsertHeader2() throws FileNotFoundException, IOException {
-        instance.insertHeader(explanation1, pw);
+        ((TXTReportBuilder)instance).insertHeader(explanation1, pw);
         pw.close();
 
         //checks if the file is created
         assertTrue(new File("text.txt").exists());
 
         //checks the data
-        assertEquals("Creation date: " + Long.toString(explanation1.getCreated().getTimeInMillis()), br.readLine());
+        assertEquals("Creation date: " + DateFormat.getInstance().format(explanation2.getCreated().getTime()), br.readLine());
         assertEquals("Report owner is: tester", br.readLine());
+        assertEquals("", br.readLine());
 
-        //checks if anyting eles has been writen to file by mistake
+        //checks if anyting else has been writen to file by mistake
         assertEquals(null, br.readLine());
 
     }
@@ -192,98 +216,127 @@ public class TXTReportBuilderTest extends TestCase {
      * that has no arguments.
      */
     public void testInsertHeader3() throws FileNotFoundException, IOException {
-        instance.insertHeader(explanation3, pw);
+        ((TXTReportBuilder)instance).insertHeader(explanation3, pw);
         pw.close();
 
         //checks if the file is created
         assertTrue(new File("text.txt").exists());
 
         //checks the data
-        assertEquals("Creation date: " + Long.toString(explanation3.getCreated().getTimeInMillis()), br.readLine());
-
-        //checks if anyting eles has been writen to file by mistake
+        assertEquals("Creation date: " + DateFormat.getInstance().format(explanation2.getCreated().getTime()), br.readLine());
+        assertEquals("", br.readLine());
+        
+        //checks if anyting else has been writen to file by mistake
         assertEquals(null, br.readLine());
     }
 
     /**
      * Test of buildReport method, of class TXTReportBuilder.
-     * Test case: unsuccessful building of a chunk because of the null arguments
-     */
-    public void testBuildReportAllNullArguments() {
-        try {
-            instance.buildReport(null, null);
-            fail("Exception should have been thrown, but it wasn't");
-        } catch (Exception e) {
-            String result = e.getMessage();
-            String expResult = "All of the arguments are mandatory, so they can not be null";
-            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
-            assertEquals(expResult, result);
-        }
-    }
-
-    /**
-     * Test of buildReport method, of class TXTReportBuilder.
-     * Test case: unsuccessful building of a chunk because of the first null argument
-     */
-    public void testBuildReportMissingFirstArgumant() {
-        try {
-            instance.buildReport(null, "test.txt");
-            fail("Exception should have been thrown, but it wasn't");
-        } catch (Exception e) {
-            String result = e.getMessage();
-            String expResult = "The argument 'explanation' is mandatory, so it can not be null";
-            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
-            assertEquals(expResult, result);
-        }
-    }
-
-    /**
-     * Test of buildReport method, of class TXTReportBuilder.
-     * Test case: unsuccessful building of a chunk because of the second null argument
-     */
-    public void testBuildReportMissingSecondArgumant() {
-        try {
-            instance.buildReport(explanation1, null);
-            fail("Exception should have been thrown, but it wasn't");
-        } catch (Exception e) {
-            String result = e.getMessage();
-            String expResult = "The argument 'filepath' must not be null or empty string";
-            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
-            assertEquals(expResult, result);
-        }
-    }
-
-    /**
-     * Test of buildReport method, of class TXTReportBuilder.
-     * Test case: unsuccessful building of a chunk because of the wrong
-     * type of the second argument
-     */
-    public void testBuildReportEmptySecondArgumant() {
-        try {
-            instance.buildReport(explanation1, "");
-            fail("Exception should have been thrown, but it wasn't");
-        } catch (Exception e) {
-            String result = e.getMessage();
-            String expResult = "The argument 'filepath' must not be null or empty string";
-            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
-            assertEquals(expResult, result);
-        }
-    }
-
-    /**
-     * Test of buildReport method, of class TXTReportBuilder.
      * Test case: successful insertion of data using the Explanation constructor
-     * that has all elements.
+     * that has all elements - together with chunk headers.
      */
     public void testBuildReport1() throws FileNotFoundException, IOException, IOException {
+        instance.setInsertChunkHeaders(true);
         instance.buildReport(explanation2, "text.txt");
 
         //checks if the file is created
         assertTrue(new File("text.txt").exists());
 
         //checks the data
-        assertEquals("Report", br.readLine());
+        assertEquals("Creation date: " + DateFormat.getInstance().format(explanation2.getCreated().getTime()), br.readLine());
+        assertEquals("Report owner is: tester", br.readLine());
+        assertEquals("The language used: EN", br.readLine());
+        assertEquals("The country is: USA", br.readLine());
+        assertEquals("", br.readLine());
+        assertEquals("Explanation title", br.readLine());
+        assertEquals("", br.readLine());
+        
+        //check first chunk - TXT chunk
+        //check chunk header
+        //checks context
+        assertEquals("The context is: informational", br.readLine());
+        
+        //check chunk content
+        assertEquals("textTest", br.readLine());
 
+        //Skip a line
+        assertEquals("", br.readLine());
+
+        //check second chunk - Image chunk
+        //checks context
+        assertEquals("The context is: informational", br.readLine());
+
+        //check chunk content
+        assertEquals("The path to this image is: imgTest.jpg", br.readLine());
+
+        //Skip a line
+        assertEquals("", br.readLine());
+
+        //check third chunk - Data chunk
+        //check chunk header
+        //checks context
+        assertEquals("The context is: error", br.readLine());
+        //checks the rule
+        assertEquals("The rule that initiated the creation of this chunk: testRule", br.readLine());
+        //checks the group
+        assertEquals("The group to which the executed rule belongs: testGroup", br.readLine());
+        //checks the tags
+        assertEquals("The tags are: tag1 tag2 ", br.readLine());
+
+        //check chunk content
+        assertEquals("testName [testUnit]", br.readLine());
+        assertEquals("-------------------", br.readLine());
+        assertEquals("value", br.readLine());
+        assertEquals("", br.readLine());
+
+        //checks if anyting else has been writen to file by mistake
+        assertEquals(null, br.readLine());
+    }
+
+    /**
+     * Test of buildReport method, of class TXTReportBuilder.
+     * Test case: successful insertion of data using the Explanation constructor
+     * that has all elements - buut with no chunk headers.
+     */
+    public void testBuildReport1WithNoHeaders() throws FileNotFoundException, IOException, IOException {
+        instance.setInsertChunkHeaders(false);
+        instance.buildReport(explanation2, "text.txt");
+
+        //checks if the file is created
+        assertTrue(new File("text.txt").exists());
+
+        //checks the data
+        assertEquals("Creation date: " + DateFormat.getInstance().format(explanation2.getCreated().getTime()), br.readLine());
+        assertEquals("Report owner is: tester", br.readLine());
+        assertEquals("The language used: EN", br.readLine());
+        assertEquals("The country is: USA", br.readLine());
+        assertEquals("", br.readLine());
+        assertEquals("Explanation title", br.readLine());
+        assertEquals("", br.readLine());
+
+        //check first chunk - TXT chunk
+        //check chunk content
+        assertEquals("textTest", br.readLine());
+
+        //Skip a line
+        assertEquals("", br.readLine());
+
+        //check second chunk - Image chunk
+        //check chunk content
+        assertEquals("The path to this image is: imgTest.jpg", br.readLine());
+
+        //Skip a line
+        assertEquals("", br.readLine());
+
+        //check third chunk - Data chunk
+        //check chunk content
+        assertEquals("testName [testUnit]", br.readLine());
+        assertEquals("-------------------", br.readLine());
+        assertEquals("value", br.readLine());
+        assertEquals("", br.readLine());
+
+        //checks if anyting else has been writen to file by mistake
+        assertEquals(null, br.readLine());
     }
 
     /**
@@ -297,8 +350,13 @@ public class TXTReportBuilderTest extends TestCase {
         //checks if the file is created
         assertTrue(new File("text.txt").exists());
 
-        //checks the data
-        assertEquals("Report", br.readLine());
+       //checks the data
+        assertEquals("Creation date: " + DateFormat.getInstance().format(explanation1.getCreated().getTime()), br.readLine());
+        assertEquals("Report owner is: tester", br.readLine());
+        assertEquals("", br.readLine());
+
+        //checks if anyting else has been writen to file by mistake
+        assertEquals(null, br.readLine());
 
 
     }
@@ -315,7 +373,11 @@ public class TXTReportBuilderTest extends TestCase {
         assertTrue(new File("text.txt").exists());
 
         //checks the data
-        assertEquals("Report", br.readLine());
+        assertEquals("Creation date: " + DateFormat.getInstance().format(explanation3.getCreated().getTime()), br.readLine());
+         assertEquals("", br.readLine());
+
+        //checks if anyting else has been writen to file by mistake
+        assertEquals(null, br.readLine());
 
     }
 }

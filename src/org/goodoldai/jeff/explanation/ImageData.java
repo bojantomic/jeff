@@ -72,7 +72,7 @@ public class ImageData implements Cloneable {
      * @param val String representing the image URL.
      * Since this value is mandatory, null and empty strings are not allowed.
      *
-     * @throws explanation.ExplanationException
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
      * if the entered argument is null or an empty string
      */
     public void setURL(String val) {

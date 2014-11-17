@@ -18,6 +18,8 @@
  */
 package org.goodoldai.jeff.explanation.data;
 
+import org.goodoldai.jeff.explanation.ExplanationException;
+
 
 /**
  * This class represents a data dimension.
@@ -35,7 +37,7 @@ public class Dimension implements Cloneable{
     private String name;
 
     /**
-     * The measuring unit for this diemnsion: $ (dollar), m (meter), in (inch).
+     * The measuring unit for this dimension: $ (dollar), m (meter), in (inch).
      * The value for this attribute is optional.
      */
     private String unit;
@@ -77,12 +79,12 @@ public class Dimension implements Cloneable{
      *
      * @param val string containing the dimension name
      *
-     * @throws explanation.ExplanationException
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
      * if the entered name is null or empty String
      */
     public void setName (String val) {
         if(val == null || val.equals(""))
-            throw new org.goodoldai.jeff.explanation.ExplanationException("You must enter a dimension name");
+            throw new ExplanationException("You must enter a dimension name");
         this.name = val;
     }
 

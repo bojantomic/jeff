@@ -81,7 +81,7 @@ public class SimpleExplanationChunkBuilderFactory implements ExplanationChunkBui
      * @return the appropriate explanation chunk builder instance for the
      * entered chunk type
      *
-     * @throws explanation.ExplanationException if the type was not recognized
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the type was not recognized
      */
     public ExplanationChunkBuilder getExplanationChunkBuilder (int type) {
         if (type == TEXT) {

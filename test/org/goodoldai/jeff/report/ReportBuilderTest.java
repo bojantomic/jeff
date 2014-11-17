@@ -86,6 +86,23 @@ public abstract class ReportBuilderTest extends TestCase {
      * Test of buildReport method, of class ReportBuilder.
      * Test case: unsuccessfull execution - explanation is null
      */
+    public void testBuildReport_Explanation_ObjectNullExplanationAndStream() {
+        try {
+            Object o = null;
+            instance.buildReport(null, o);
+            fail("An exception should have been thrown but wasn't");
+        } catch (Exception e) {
+            assertTrue(e instanceof ExplanationException);
+            String expResult = "The entered explanation must not be null";
+            String result = e.getMessage();
+            assertEquals(expResult, result);
+        }
+    }
+
+    /**
+     * Test of buildReport method, of class ReportBuilder.
+     * Test case: unsuccessfull execution - explanation is null
+     */
     public void testBuildReport_Explanation_ObjectNullExplanation() {
         try {
             instance.buildReport(null, new Object());
@@ -115,6 +132,24 @@ public abstract class ReportBuilderTest extends TestCase {
         }
     }
     
+    /**
+     * Test of buildReport method, of class ReportBuilder.
+     * Test case: unsuccessfull execution - explanation is null
+     */
+    public void testBuildReport_Explanation_StringNullExplanationAndFilepath() {
+        try {
+            Explanation e = null;
+            String filepath = null;
+            instance.buildReport(e, filepath);
+            fail("An exception should have been thrown but wasn't");
+        } catch (Exception e) {
+            assertTrue(e instanceof ExplanationException);
+            String expResult = "The entered explanation must not be null";
+            String result = e.getMessage();
+            assertEquals(expResult, result);
+        }
+    }
+
     /**
      * Test of buildReport method, of class ReportBuilder.
      * Test case: unsuccessfull execution - explanation is null
@@ -169,4 +204,23 @@ public abstract class ReportBuilderTest extends TestCase {
         }
     }
 
+    /**
+     * Test of isInsertChunkHeaders method, of class ReportBuilder.
+     * Test case: successfull execution - check if false is the default value
+     */
+    public void testIsInsertChunkHeadersDefaultFalse() {
+           assertEquals(false, instance.isInsertChunkHeaders());
+        }
+
+    /**
+     * Test of setInsertChunkHeaders method, of class ReportBuilder.
+     * Test case: successfull execution
+     */
+    public void testSetInsertChunkHeadersDefaultFalse() {
+           instance.setInsertChunkHeaders(true);
+           assertEquals(true, instance.isInsertChunkHeaders());
+
+           instance.setInsertChunkHeaders(false);
+           assertEquals(false, instance.isInsertChunkHeaders());
+        }
 }

@@ -30,7 +30,7 @@ import junit.framework.TestCase;
 /**
  * @author Bojan Tomic
  */
-public class TextExplanationChunkBuilderTest extends TestCase {
+public class DefaultTextExplanationChunkBuilderTest extends TestCase {
 
     Object[] content = null;
     int context = 0;
@@ -42,7 +42,8 @@ public class TextExplanationChunkBuilderTest extends TestCase {
     File imageCaptions = null;
     File text = null;
     File textgroup = null;
-    TextExplanationChunkBuilder instance = null;
+    DefaultTextExplanationChunkBuilder instance = null;
+    InternationalizationManager im = null;
 
     @Override
     protected void setUp() throws Exception {
@@ -96,7 +97,10 @@ public class TextExplanationChunkBuilderTest extends TestCase {
 
         //The internationalization manager needs to be initialized before
         //explanation builders can use it
-        InternationalizationManager.initializeManager(new Locale("srb", "RS"));
+        im = new InternationalizationManager(new Locale("srb", "RS"));
+
+        //Initialize the text explanation chunk builder
+        instance = new DefaultTextExplanationChunkBuilder(im);
     }
 
     @Override
@@ -109,11 +113,27 @@ public class TextExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class TextExplanationChunkBuilder.
+     * Test of constructor, of class DefaultTextExplanationChunkBuilder.
+     * Test case: unsuccessfull execution - i18nManager is null
+     */
+    public void testConstructori18nManagerNull() {
+        try {
+            instance= new DefaultTextExplanationChunkBuilder(null);
+            fail("Exception should have been thrown, but it wasn't");
+        } catch (Exception e) {
+            String result = e.getMessage();
+            String expResult = "The entered i18nManager instance must not be null";
+            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
+            assertEquals(expResult, result);
+        }
+
+    }
+
+    /**
+     * Test of buildChunk method, of class DefaultTextExplanationChunkBuilder.
      * Test case: unsuccessfull execution - wrong type content
      */
     public void testBuildChunkWrongTypeContent() {
-        instance = new TextExplanationChunkBuilder();
         try {
             instance.buildChunk(context, group, rule, tags, "wrong type");
             fail("Exception should have been thrown, but it wasn't");
@@ -127,12 +147,10 @@ public class TextExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class TextExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultTextExplanationChunkBuilder.
      * Test case: unsuccessfull execution - translation doesn't exist
      */
     public void testBuildChunkNoTranslation() {
-        instance = new TextExplanationChunkBuilder();
-
         try {
             rule = "rule 65";
             content = null;
@@ -148,12 +166,10 @@ public class TextExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class TextExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultTextExplanationChunkBuilder.
      * Test case: successfull execution
      */
     public void testBuildChunkSuccessfull1() {
-        instance = new TextExplanationChunkBuilder();
-
         TextExplanationChunk tc =
                 (TextExplanationChunk) (instance.buildChunk(context, group, rule, tags, content));
 
@@ -169,12 +185,10 @@ public class TextExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class TextExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultTextExplanationChunkBuilder.
      * Test case: successfull execution - translation with no arguments
      */
     public void testBuildChunkSuccessfull2() {
-        instance = new TextExplanationChunkBuilder();
-
         rule = "rule 4";
         content = null;
         TextExplanationChunk tc =
@@ -191,13 +205,11 @@ public class TextExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class TextExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultTextExplanationChunkBuilder.
      * Test case: successfull execution - translation with no arguments
      * and with the rule group name omitted
      */
     public void testBuildChunkSuccessfull3() {
-        instance = new TextExplanationChunkBuilder();
-
         rule = "rule 2";
         content = null;
         group = null;

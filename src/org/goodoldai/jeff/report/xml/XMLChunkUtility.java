@@ -24,7 +24,8 @@ import java.lang.reflect.Field;
 import org.dom4j.Element;
 
 /**
- * This class is used to do the utility jobs that are common to all of the XML classes
+ * This class is used to do the utility jobs that are common for XML report
+ * generation purposes.
  *
  * @author Boris Horvat
  */
@@ -74,14 +75,17 @@ class XMLChunkUtility {
     }
 
     /**
-     * This is a method that is used to translate the context from an integer in the String
+     *  This is a method that is used to translate the context from an integer
+     * into a String. This method uses reflection in order to do this.
      *
      * @param context the int representation of explanation context
      * @param echunk explanation chunk that holds the string value of the context
      *
      * @return the string value of the context
      *
-     * @throws ExplanationException is IllegalArgumentException or IllegalAccessException occur
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
+     * In the case of any problems by covering raised IllegalArgumentException or
+     * IllegalAccessException.
      */
     static String translateContext(int context, ExplanationChunk echunk) {
 

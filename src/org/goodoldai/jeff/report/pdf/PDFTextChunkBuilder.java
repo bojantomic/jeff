@@ -51,12 +51,14 @@ public class PDFTextChunkBuilder implements ReportChunkBuilder {
      * @param echunk text explanation chunk that needs to be transformed
      * @param stream output stream to which the transformed chunk will be
      * written as output (in this case com.lowagie.text.Document)
+     * @param insertHeaders denotes if chunk headers should be inserted into the
+     * report (true) or not (false)
      *
-     * @throws explanation.ExplanationException if any of the arguments are
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are
      * null, if the entered chunk is not a TextExplanationChunk instance or if 
      * the entered output stream type is not com.lowagie.text.Document
      */
-    public void buildReportChunk (ExplanationChunk echunk, Object stream) {
+    public void buildReportChunk (ExplanationChunk echunk, Object stream, boolean insertHeaders) {
         if (echunk == null)
             throw new ExplanationException ("The entered chunk must not be null");
 
@@ -72,7 +74,8 @@ public class PDFTextChunkBuilder implements ReportChunkBuilder {
         com.lowagie.text.Document doc = ((com.lowagie.text.Document)stream);
         
         //Insert general chunk data
-        PDFChunkUtility.insertChunkHeader(echunk, doc);
+        if (insertHeaders)
+            PDFChunkUtility.insertChunkHeader(echunk, doc);
 
         try {
             //Insert content

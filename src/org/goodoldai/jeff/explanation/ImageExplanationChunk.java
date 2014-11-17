@@ -57,7 +57,7 @@ public class ImageExplanationChunk extends ExplanationChunk implements Cloneable
      *
      * @param val chunk content
      *
-     * @throws explanation.ExplanationException
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
      * if the entered object is not an ImageData object or is null
      */
     public void setContent(Object val) {

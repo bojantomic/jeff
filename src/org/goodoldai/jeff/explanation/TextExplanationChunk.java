@@ -57,7 +57,7 @@ public class TextExplanationChunk extends ExplanationChunk implements Cloneable 
      *
      * @param val chunk content
      *
-     * @throws explanation.ExplanationException if the entered object is not a
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the entered object is not a
      * String, is null or has no characters (empty string).
      */
     public void setContent(Object val) {

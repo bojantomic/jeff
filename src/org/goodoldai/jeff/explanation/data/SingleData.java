@@ -18,6 +18,8 @@
  */
 package org.goodoldai.jeff.explanation.data;
 
+import org.goodoldai.jeff.explanation.ExplanationException;
+
 /**
  * This class represents single data like [17C] or [200$]. This data
  * consists of a value and its related dimension.
@@ -57,11 +59,12 @@ public class SingleData implements Cloneable{
      *
      * @param val Dimension object related to this data
      *
-     * @throws explanation.ExplanationException if the entered object is null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
+     * if the entered object is null
      */
     public void setDimension(Dimension val) {
         if (val == null) {
-            throw new org.goodoldai.jeff.explanation.ExplanationException("You have to set dimensions related to this data");
+            throw new ExplanationException("You have to set dimensions related to this data");
         }
         this.dimension = val;
     }
@@ -80,11 +83,11 @@ public class SingleData implements Cloneable{
      * 
      * @param val object containing the data value
      *
-     * @throws explanation.ExplanationException if the entered object is null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the entered object is null
      */
     public void setValue(Object val) {
         if (val == null) {
-            throw new org.goodoldai.jeff.explanation.ExplanationException("You have to set the values releted to this data");
+            throw new ExplanationException("You have to set the values releted to this data");
         }
         this.value = val;
     }

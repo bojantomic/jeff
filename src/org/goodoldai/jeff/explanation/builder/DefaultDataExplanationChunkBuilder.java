@@ -33,12 +33,28 @@ import org.goodoldai.jeff.explanation.data.TwoDimData;
  *
  * @author Bojan Tomic
  */
-public class DataExplanationChunkBuilder implements ExplanationChunkBuilder {
+public class DefaultDataExplanationChunkBuilder implements ExplanationChunkBuilder {
 
     /**
-     * Initializes the builder
+     * This is an instance of the InternationalizationManager which
+     * will be used for translating content.
      */
-    public DataExplanationChunkBuilder() {
+    private InternationalizationManager im;
+
+    /**
+     * Initializes the builder and sets the i18nManager.
+     *
+     * @param i18nManager An instance of the InternationalizationManager.
+     *
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the i18nManager instance
+     * is null
+     */
+    public DefaultDataExplanationChunkBuilder(InternationalizationManager i18nManager) {
+        if (i18nManager == null)
+            throw new ExplanationException("The entered i18nManager instance must not be null");
+
+        im = i18nManager;
+
     }
 
     /**
@@ -58,7 +74,7 @@ public class DataExplanationChunkBuilder implements ExplanationChunkBuilder {
      *
      * @return created DataExplanationChunk instance
      *
-     * @throws explanation.ExplanationException if the entered content
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the entered content
      * is null or is not an instance of: SingleData, OneDimData,
      * TwoDimData or ThreeDimData
      */
@@ -106,11 +122,6 @@ public class DataExplanationChunkBuilder implements ExplanationChunkBuilder {
     }
 
     private void translate(Dimension dimension) {
-        //Get internationalization manager instance
-        //The manager must be initialized for this to work
-        InternationalizationManager im =
-                InternationalizationManager.getManager();
-
         //Translate dimension name if the translation exists
         if (dimension.getName() != null) {
             //Translate name

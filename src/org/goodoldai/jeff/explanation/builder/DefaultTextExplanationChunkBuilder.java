@@ -28,12 +28,28 @@ import org.goodoldai.jeff.explanation.builder.internationalization.International
  *
  * @author Bojan Tomic
  */
-public class TextExplanationChunkBuilder implements ExplanationChunkBuilder {
+public class DefaultTextExplanationChunkBuilder implements ExplanationChunkBuilder {
 
     /**
-     * Initializes the builder
+     * This is an instance of the InternationalizationManager which
+     * will be used for translating content.
      */
-    public TextExplanationChunkBuilder() {
+    private InternationalizationManager im;
+
+    /**
+     * Initializes the builder and sets the i18nManager.
+     *
+     * @param i18nManager An instance of the InternationalizationManager.
+     *
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the i18nManager instance
+     * is null
+     */
+    public DefaultTextExplanationChunkBuilder(InternationalizationManager i18nManager) {
+        if (i18nManager == null)
+            throw new ExplanationException("The entered i18nManager instance must not be null");
+
+        im = i18nManager;
+
     }
 
     /**
@@ -58,17 +74,13 @@ public class TextExplanationChunkBuilder implements ExplanationChunkBuilder {
      *
      * @return created TextExplanationChunk instance
      *
-     * @throws explanation.ExplanationException if the entered content
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the entered content
      * is not an array of Object or if the translation could not be found
      */
     public ExplanationChunk buildChunk(int context, String group, String rule, String[] tags, Object content) {
         if ((content != null) && (!(content instanceof Object[]))) {
             throw new ExplanationException("The entered content must be an array of Object instances");
         }
-
-        //Get internationalization manager instance
-        //The manager must be initialized for this to work
-        InternationalizationManager im = InternationalizationManager.getManager();
 
         //Translate text and insert entered arguments
         Object[] arguments = (Object[]) (content);

@@ -81,7 +81,7 @@ public class PDFTextChunkBuilderTest extends TestCase {
     public void testBuildReportChunkNullChunk() {
 
         try {
-            instance.buildReportChunk(null, doc);
+            instance.buildReportChunk(null, doc, false);
             fail("An exception should have been thrown but wasn't");
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
@@ -98,7 +98,7 @@ public class PDFTextChunkBuilderTest extends TestCase {
     public void testBuildReportChunkNullStream() {
 
         try {
-            instance.buildReportChunk(tchunk, null);
+            instance.buildReportChunk(tchunk, null, false);
             fail("An exception should have been thrown but wasn't");
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
@@ -117,7 +117,7 @@ public class PDFTextChunkBuilderTest extends TestCase {
                 new ImageExplanationChunk(new ImageData("pic.jpg"));
 
         try {
-            instance.buildReportChunk(ichunk, doc);
+            instance.buildReportChunk(ichunk, doc, false);
             fail("An exception should have been thrown but wasn't");
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
@@ -134,7 +134,7 @@ public class PDFTextChunkBuilderTest extends TestCase {
     public void testBuildReportChunkWrongTypeStream() {
 
         try {
-            instance.buildReportChunk(tchunk, new Object());
+            instance.buildReportChunk(tchunk, new Object(), false);
             fail("An exception should have been thrown but wasn't");
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
@@ -149,7 +149,7 @@ public class PDFTextChunkBuilderTest extends TestCase {
      * Test case: successfull execution
      */
     public void testBuildReportChunkSuccessfull() {
-        instance.buildReportChunk(tchunk, doc);
+        instance.buildReportChunk(tchunk, doc, true);
 
         ArrayList<Object[]> events = docListener.getCapturedEvents();
 
@@ -174,6 +174,24 @@ public class PDFTextChunkBuilderTest extends TestCase {
 
         //Check the fifth event - chunk content added as paragraph
         event = events.get(4);
+        confirmParagraphAdded(event, content);
+
+    }
+
+    /**
+     * Test of buildReportChunk method, of class PDFTextChunkBuilder.
+     * Test case: successfull execution but no chunk headers inserted
+     */
+    public void testBuildReportChunkSuccessfull2() {
+        instance.buildReportChunk(tchunk, doc, false);
+
+        ArrayList<Object[]> events = docListener.getCapturedEvents();
+
+        //Check that there has been 1 paragraph added - 1 event
+        assertTrue(events.size() == 1);
+
+        //Check the first event - chunk content added as paragraph
+        Object[] event = events.get(0);
         confirmParagraphAdded(event, content);
 
     }

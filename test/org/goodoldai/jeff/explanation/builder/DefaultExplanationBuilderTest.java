@@ -124,6 +124,7 @@ public class DefaultExplanationBuilderTest extends ExplanationBuilderTest {
         //Create a sample image captions file with some sample data
         imageCaptions = new File("test" + File.separator + "image_captions_srb_RS.properties");
         PrintWriter imagecaptpw = new PrintWriter(new FileWriter(imageCaptions));
+        imagecaptpw.println("explanation\\ title = naslov objasnjenja");
         imagecaptpw.println("Whale\\ photo = Fotografija kita");
         imagecaptpw.println("Image\\ 1 = Slika 1");
         imagecaptpw.close();
@@ -141,7 +142,7 @@ public class DefaultExplanationBuilderTest extends ExplanationBuilderTest {
         textgrouppw.println("rule\\ 4 = donet je zakljucak 4");
         textgrouppw.close();
 
-        explanation = new Explanation("owner 1", "srb", "RS");
+        explanation = new Explanation("owner 1", "srb", "RS","explanation title");
 
     }
 
@@ -160,7 +161,7 @@ public class DefaultExplanationBuilderTest extends ExplanationBuilderTest {
      * not exist
      */
     public void testDefaultExplanationBuilderNoPropertyFiles() {
-        explanation = new Explanation("owner 1", "fr", "FR");
+        explanation = new Explanation("owner 1", "fr", "FR",null);
 
         try {
             instance = getInstance(explanation, getFactory());
@@ -179,7 +180,7 @@ public class DefaultExplanationBuilderTest extends ExplanationBuilderTest {
      * the default locale not exist
      */
     public void testDefaultExplanationBuilderNoPropertyFilesDefaultLocale() {
-        explanation = new Explanation("owner 1", null, null);
+        explanation = new Explanation("owner 1", null, null, null);
 
         try {
             instance = getInstance(explanation, getFactory());
@@ -193,11 +194,24 @@ public class DefaultExplanationBuilderTest extends ExplanationBuilderTest {
     }
 
     /**
+     * Test of two argument constructor, of class DefaultExplanationBuilder.
+     * Test case: succesfull initialization
+     */
+    public void testDefaultExplanationBuilderOK() {
+
+        instance = getInstance(explanation, getFactory());
+
+        //Test if the title was translated
+        assertEquals("naslov objasnjenja",explanation.getTitle());
+
+    }
+
+    /**
      * Test of addExplanationChunk method, of class DefaultExplanationBuilder.
      * Test case: unsuccesfull execution - unknown chunk type
      */
     public void testAddExplanationChunkUnknownChunkType() {
-        explanation = new Explanation("owner 1", "srb", "RS");
+        explanation = new Explanation("owner 1", "srb", "RS", null);
 
         instance = getInstance(explanation, getFactory());
 
@@ -217,7 +231,7 @@ public class DefaultExplanationBuilderTest extends ExplanationBuilderTest {
      * Test case: succesfull execution - text chunk added
      */
     public void testAddExplanationSuccessfullTextChunk() {
-        explanation = new Explanation("owner 1", "srb", "RS");
+        explanation = new Explanation("owner 1", "srb", "RS", null);
 
         instance = getInstance(explanation, getFactory());
 
@@ -251,7 +265,7 @@ public class DefaultExplanationBuilderTest extends ExplanationBuilderTest {
      * Test case: succesfull execution - image chunk added
      */
     public void testAddExplanationSuccessfullImageChunk() {
-        explanation = new Explanation("owner 1", "srb", "RS");
+        explanation = new Explanation("owner 1", "srb", "RS", null);
 
         instance = getInstance(explanation, getFactory());
 
@@ -288,7 +302,7 @@ public class DefaultExplanationBuilderTest extends ExplanationBuilderTest {
      * Test case: succesfull execution - data chunk added
      */
     public void testAddExplanationSuccessfullDataChunk() {
-        explanation = new Explanation("owner 1", "srb", "RS");
+        explanation = new Explanation("owner 1", "srb", "RS", null);
 
         instance = getInstance(explanation, getFactory());
 
@@ -318,12 +332,12 @@ public class DefaultExplanationBuilderTest extends ExplanationBuilderTest {
         assertEquals("RSD", ((SingleData) dc.getContent()).getDimension().getUnit());
     }
 
-        /**
+    /**
      * Test of addExplanationChunk method, of class DefaultExplanationBuilder.
      * Test case: succesfull execution - three chunks added
      */
     public void testAddExplanationSuccessfullThreeChunks() {
-        explanation = new Explanation("owner 1", "srb", "RS");
+        explanation = new Explanation("owner 1", "srb", "RS", null);
 
         instance = getInstance(explanation, getFactory());
 

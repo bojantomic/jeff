@@ -29,12 +29,28 @@ import org.goodoldai.jeff.explanation.builder.internationalization.International
  *
  * @author Bojan Tomic
  */
-public class ImageExplanationChunkBuilder implements ExplanationChunkBuilder {
+public class DefaultImageExplanationChunkBuilder implements ExplanationChunkBuilder {
 
     /**
-     * Initializes the builder
+     * This is an instance of the InternationalizationManager which
+     * will be used for translating content.
      */
-    public ImageExplanationChunkBuilder() {
+    private InternationalizationManager im;
+
+    /**
+     * Initializes the builder and sets the i18nManager.
+     *
+     * @param i18nManager An instance of the InternationalizationManager.
+     *
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the i18nManager instance
+     * is null
+     */
+    public DefaultImageExplanationChunkBuilder(InternationalizationManager i18nManager) {
+        if (i18nManager == null)
+            throw new ExplanationException("The entered i18nManager instance must not be null");
+
+        im = i18nManager;
+
     }
 
     /**
@@ -53,7 +69,7 @@ public class ImageExplanationChunkBuilder implements ExplanationChunkBuilder {
      *
      * @return created ImageExplanationChunk instance
      *
-     * @throws explanation.ExplanationException if the entered content is null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the entered content is null
      * or is not an ImageData instance
      */
     public ExplanationChunk buildChunk(int context, String group, String rule, String[] tags, Object content) {
@@ -66,11 +82,6 @@ public class ImageExplanationChunkBuilder implements ExplanationChunkBuilder {
         //Translate image caption if it is present and if the
         //translation exists
         if (chunkcontent.getCaption() != null) {
-
-            //Get internationalization manager instance
-            //The manager must be initialized for this to work
-            InternationalizationManager im =
-                    InternationalizationManager.getManager();
 
             //Translate caption
             String translatedcaption =

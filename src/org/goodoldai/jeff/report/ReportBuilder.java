@@ -47,12 +47,18 @@ public abstract class ReportBuilder {
     protected ReportChunkBuilderFactory factory;
 
     /**
+     * This attribute denotes if chunk headers should be inserted into the
+     * report (true) or not (false). False is the default value.
+     */
+    private boolean insertChunkHeaders = false;
+
+    /**
      * Creates the report builder and provides it with a report chunk builder 
      * factory instance
      *
      * @param factory report chunk builder factory instance
      *
-     * @throws explanation.ExplanationException if the entered factory is null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the entered factory is null
      */
     public ReportBuilder(ReportChunkBuilderFactory factory) {
         if (factory == null) {
@@ -78,7 +84,7 @@ public abstract class ReportBuilder {
      * report
      * @param filepath a string representing an URL for the file
      *
-     * @throws explanation.ExplanationException if any of the arguments are null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are null
      * or if filepath is an empty string
      */
     public abstract void buildReport(Explanation explanation, String filepath);
@@ -91,7 +97,7 @@ public abstract class ReportBuilder {
      * report
      * @param stream output stream to which the report is to be written
      *
-     * @throws explanation.ExplanationException if any of the arguments are null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are null
      */
     public void buildReport(Explanation explanation, Object stream) {
         if (explanation == null) {
@@ -116,7 +122,7 @@ public abstract class ReportBuilder {
             ReportChunkBuilder cbuilder = factory.getReportChunkBuilder(chunk);
 
             //Transform chunk and insert it into the report
-            cbuilder.buildReportChunk(chunk, stream);
+            cbuilder.buildReportChunk(chunk, stream, insertChunkHeaders);
         }
 
     }
@@ -124,16 +130,43 @@ public abstract class ReportBuilder {
     /**
      * This abstract method should insert the header into the report. The 
      * header should consist of general data collected from the explanation 
-     * (date and time created, owner, language, country)
+     * (date and time created, owner, title, language and country)
      *
      * @param explanation explanation from which the header data is to be
      * collected
      * @param stream output stream that the header is supposed to be inserted into
      * 
-     * @throws explanation.ExplanationException if any of the arguments are null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are null
      * or if the entered output stream type is not correct (concrete output 
      * stream type depends on the subclass implementation)
      */
     protected abstract void insertHeader(Explanation explanation, Object stream);
+
+    /**
+     * Returns an indicator denoting if chunk headers should be inserted into
+     * the report or not.
+     *  
+     * @return true if chunk headers are to be inserted into the report, false
+     * otherwise
+     */
+    public boolean isInsertChunkHeaders() {
+        return insertChunkHeaders;
+    }
+
+    /**
+     * Sets an indicator value denoting if chunk headers should be inserted into
+     * the report or not. False is the default value.
+     *
+     * Chunk headers should be inserted into the report if there is a need to
+     * do some debugging by using the explanation facility, or if there is a
+     * need to present information on which rules were responsible for creating
+     * the explanation, what are the rule groups, tags, the message context etc.
+     * 
+     * @param insertChunkHeaders Set to true if chunk headers should to be
+     * inserted into the report, false otherwise.
+     */
+    public void setInsertChunkHeaders(boolean insertChunkHeaders) {
+        this.insertChunkHeaders = insertChunkHeaders;
+    }
 }
 

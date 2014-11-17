@@ -58,7 +58,12 @@ public class TXTImageChunkBuilderTest extends TestCase {
     }
 
     @Override
-    protected void tearDown() {
+    protected void tearDown() throws IOException{
+
+        pw.close();
+        br.close();
+
+        new File("tekst.txt").delete();
         instance = null;
     }
 
@@ -68,7 +73,7 @@ public class TXTImageChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkAllNullArguments() {
         try {
-            instance.buildReportChunk(null, null);
+            instance.buildReportChunk(null, null, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -84,7 +89,7 @@ public class TXTImageChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkMissingFirstArgumant() {
         try {
-            instance.buildReportChunk(null, pw);
+            instance.buildReportChunk(null, pw, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -100,7 +105,7 @@ public class TXTImageChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkMissingSecondArgumant() {
         try {
-            instance.buildReportChunk(echunk, null);
+            instance.buildReportChunk(echunk, null, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -117,7 +122,7 @@ public class TXTImageChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkWrongTypeFirsArgumant() {
         try {
-            instance.buildReportChunk(new TextExplanationChunk("test"), pw);
+            instance.buildReportChunk(new TextExplanationChunk("test"), pw, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -134,7 +139,7 @@ public class TXTImageChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkWrongTypeSecondArgumant() {
         try {
-            instance.buildReportChunk(echunk, "test");
+            instance.buildReportChunk(echunk, "test", false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -150,7 +155,7 @@ public class TXTImageChunkBuilderTest extends TestCase {
      * that has all elements.
      */
     public void testBuildSuccesfull() throws FileNotFoundException, IOException {
-        instance.buildReportChunk(echunk1, pw);
+        instance.buildReportChunk(echunk1, pw, true);
         pw.close();
 
         //checks if the file is created
@@ -161,10 +166,11 @@ public class TXTImageChunkBuilderTest extends TestCase {
         br.readLine();
         br.readLine();
         br.readLine();
-
+        
         //checks the content
         assertEquals("Caption is: testCaption", br.readLine());
         assertEquals("The path to this image is: test.jpg", br.readLine());
+        assertEquals("", br.readLine());
 
         //checks if anyting eles has been writen to file by mistake
         assertEquals(null, br.readLine());
@@ -178,7 +184,7 @@ public class TXTImageChunkBuilderTest extends TestCase {
      * that only has content.
      */
     public void testBuildSuccesfull2() throws FileNotFoundException, IOException {
-        instance.buildReportChunk(echunk, pw);
+        instance.buildReportChunk(echunk, pw, true);
         pw.close();
 
        //checks if the file is created
@@ -186,11 +192,34 @@ public class TXTImageChunkBuilderTest extends TestCase {
 
         //skips the lines in document that are tested else were
         br.readLine();
+        
+        //checks the content
+        assertEquals("The path to this image is: test.jpg", br.readLine());
+        assertEquals("", br.readLine());
+
+        //checks if anyting eles has been writen to file by mistake
+        assertEquals(null, br.readLine());
+
+
+    }
+
+    /**
+     * Test of buildReportChunk method, of class TXTImageChunkBuilder.
+     * Test case: successful insertion of data using the ExplanationChunk constructor
+     * that only has content, but with no headers.
+     */
+    public void testBuildSuccesfull3NoHeaders() throws FileNotFoundException, IOException {
+        instance.buildReportChunk(echunk, pw, false);
+        pw.close();
+
+       //checks if the file is created
+        assertTrue(new File("tekst.txt").exists());
 
         //checks the content
         assertEquals("The path to this image is: test.jpg", br.readLine());
+        assertEquals("", br.readLine());
 
-        //checks if anyting eles has been writen to file by mistake
+        //checks if anyting else has been writen to file by mistake
         assertEquals(null, br.readLine());
 
 

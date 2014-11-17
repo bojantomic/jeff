@@ -28,23 +28,35 @@ import org.goodoldai.jeff.explanation.data.SingleData;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import junit.framework.TestCase;
+import java.text.DateFormat;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.goodoldai.jeff.report.ReportBuilder;
+import org.goodoldai.jeff.report.ReportBuilderTest;
+import org.goodoldai.jeff.report.ReportChunkBuilderFactory;
 
 /**
  * @author Boris Horvat
  */
-public class XMLReportBuilderTest extends TestCase {
+public class XMLReportBuilderTest extends ReportBuilderTest {
 
-    XMLReportBuilder builder;
     Explanation explanation1;
     Explanation explanation2;
     Document document1;
     Document document2;
+
+    @Override
+    public ReportBuilder getInstance(ReportChunkBuilderFactory factory) {
+        return new XMLReportBuilder(factory);
+    }
+
+    @Override
+    public ReportChunkBuilderFactory getFactory() {
+        return new XMLReportChunkBuilderFactory();
+    }
 
     /**
      * Creates a explanation.TextExplanationChunk, explanation.ImageExplanationChunk,
@@ -54,11 +66,11 @@ public class XMLReportBuilderTest extends TestCase {
     @Override
     protected void setUp() {
 
-        builder = new XMLReportBuilder(new XMLReportBuilderChunkFactory());
+        instance = new XMLReportBuilder(new XMLReportChunkBuilderFactory());
 
         explanation1 = new Explanation("tester");
 
-        explanation2 = new Explanation("tester", "EN", "USA");
+        explanation2 = new Explanation("tester", "EN", "USA", "explanation title");
         explanation2.addChunk(new TextExplanationChunk("textTest"));
         explanation2.addChunk(new ImageExplanationChunk(new ImageData("imgTest.jpg")));
 
@@ -83,7 +95,7 @@ public class XMLReportBuilderTest extends TestCase {
      * Test case: successful building of explanation
      */
     public void testBuildReportMainMethod() throws DocumentException {
-        builder.buildReport(explanation2, "test.xml");
+        instance.buildReport(explanation2, "test.xml");
 
         //checks if the file is created
         assertTrue(new File("test.xml").exists());
@@ -94,7 +106,7 @@ public class XMLReportBuilderTest extends TestCase {
         Element root = document.getRootElement();
 
         //checks the number of attributes and elements
-        assertEquals(4, root.attributes().size());
+        assertEquals(5, root.attributes().size());
         assertEquals(3, root.elements().size());
 
         //checks the name of root element
@@ -104,78 +116,14 @@ public class XMLReportBuilderTest extends TestCase {
         assertEquals("tester", root.attribute("owner").getText());
         assertEquals("EN", root.attribute("language").getText());
         assertEquals("USA", root.attribute("country").getText());
-        assertEquals(String.valueOf(explanation2.getCreated().getTimeInMillis()), root.attribute("date").getText());
+        assertEquals(DateFormat.getInstance().format(explanation2.getCreated().getTime()), root.attribute("date").getText());
+        assertEquals("explanation title", root.attribute("title").getText());
 
         //checks the names of elements which hold the explanation chunks which were tested in other mehtods and classes
         assertEquals("textualExplanation", root.element("textualExplanation").getName());
         assertEquals("imageExplanation", root.element("imageExplanation").getName());
         assertEquals("dataExplanation", root.element("dataExplanation").getName());
 
-    }
-
-    /**
-     * Test of buildReport method (main method), of class XMLReportBuilder.
-     * Test case: unsuccessful building of a chunk because of the null arguments
-     */
-    public void testBuildReportMainMethodMissingAllArgument() {
-        try {
-            builder.buildReport(null, null);
-            fail("Exception should have been thrown, but it wasn't");
-        } catch (Exception e) {
-            String result = e.getMessage();
-            String expResult = "All of the arguments are mandatory, so they can not be null";
-            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
-            assertEquals(expResult, result);
-        }
-    }
-
-    /**
-     * Test of buildReport method (main method), of class XMLReportBuilder.
-     * Test case: unsuccessful building of a chunk because of the First null argument
-     */
-    public void testBuildReportMainMethodMissingFirstArgument() {
-        try {
-            builder.buildReport(null, document1);
-            fail("Exception should have been thrown, but it wasn't");
-        } catch (Exception e) {
-            String result = e.getMessage();
-            String expResult = "The argument 'explanation' is mandatory, so it can not be null";
-            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
-            assertEquals(expResult, result);
-        }
-    }
-
-    /**
-     * Test of buildReport method (main method), of class XMLReportBuilder.
-     * Test case: unsuccessful building of a chunk because of the second null argument
-     */
-    public void testBuildReportMainMethodMissingSecondArgument() {
-        try {
-            builder.buildReport(explanation1, null);
-            fail("Exception should have been thrown, but it wasn't");
-        } catch (Exception e) {
-            String result = e.getMessage();
-            String expResult = "The argument 'filepath' must not be null or empty string";
-            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
-            assertEquals(expResult, result);
-        }
-    }
-
-    /**
-     * Test of buildReport method (main method), of class XMLReportBuilder.
-     * Test case: unsuccessful building of a chunk because of the wrong
-     * type of the second argument
-     */
-    public void testBuildReportMainMethodSecondArgumentEmptyString() {
-        try {
-            builder.buildReport(explanation1, "");
-            fail("Exception should have been thrown, but it wasn't");
-        } catch (Exception e) {
-            String result = e.getMessage();
-            String expResult = "The argument 'filepath' must not be null or empty string";
-            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
-            assertEquals(expResult, result);
-        }
     }
 
     /**
@@ -183,7 +131,7 @@ public class XMLReportBuilderTest extends TestCase {
      * Test case: successful building of explanation
      */
     public void testBuildReport() throws FileNotFoundException, DocumentException {
-        builder.buildReport(explanation2, new PrintWriter(new File("test.xml")));
+        instance.buildReport(explanation2, new PrintWriter(new File("test.xml")));
 
         SAXReader reader = new SAXReader();
         Document document = reader.read("test.xml");
@@ -191,7 +139,7 @@ public class XMLReportBuilderTest extends TestCase {
         Element root = document.getRootElement();
 
         //checks the number of attributes and elements
-        assertEquals(4, root.attributes().size());
+        assertEquals(5, root.attributes().size());
         assertEquals(3, root.elements().size());
 
         //checks the name of root element
@@ -201,7 +149,8 @@ public class XMLReportBuilderTest extends TestCase {
         assertEquals("tester", root.attribute("owner").getText());
         assertEquals("EN", root.attribute("language").getText());
         assertEquals("USA", root.attribute("country").getText());
-        assertEquals(String.valueOf(explanation2.getCreated().getTimeInMillis()), root.attribute("date").getText());
+        assertEquals(DateFormat.getInstance().format(explanation2.getCreated().getTime()), root.attribute("date").getText());
+        assertEquals("explanation title", root.attribute("title").getText());
 
         //checks the names of elements which hold the explanation chunks which were tested in other mehtods and classes
         assertEquals("textualExplanation", root.element("textualExplanation").getName());
@@ -212,54 +161,47 @@ public class XMLReportBuilderTest extends TestCase {
 
     /**
      * Test of buildReport method, of class XMLReportBuilder.
-     * Test case: unsuccessful building of a chunk because of the null arguments
+     * Test case: successful building of explanation - but with no chunk headers
      */
-    public void testBuildReportMissingAllArgument() {
-        try {
-            builder.buildReport(null, null);
-            fail("Exception should have been thrown, but it wasn't");
-        } catch (Exception e) {
-            String result = e.getMessage();
-            String expResult = "All of the arguments are mandatory, so they can not be null";
-            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
-            assertEquals(expResult, result);
-        }
+    public void testBuildReportNoChunkHeaders() throws FileNotFoundException, DocumentException {
+        instance.setInsertChunkHeaders(false);
+        instance.buildReport(explanation2, new PrintWriter(new File("test.xml")));
+
+        SAXReader reader = new SAXReader();
+        Document document = reader.read("test.xml");
+
+        Element root = document.getRootElement();
+
+        //checks the number of attributes and elements
+        assertEquals(5, root.attributes().size());
+        assertEquals(3, root.elements().size());
+
+        //checks the name of root element
+        assertEquals("explanation", root.getName());
+
+        //checks the values of attributes
+        assertEquals("tester", root.attribute("owner").getText());
+        assertEquals("EN", root.attribute("language").getText());
+        assertEquals("USA", root.attribute("country").getText());
+        assertEquals(DateFormat.getInstance().format(explanation2.getCreated().getTime()), root.attribute("date").getText());
+        assertEquals("explanation title", root.attribute("title").getText());
+
+        //checks the names of elements which hold the explanation chunks which were tested in other mehtods and classes
+        assertEquals("textualExplanation", root.element("textualExplanation").getName());
+        assertEquals("imageExplanation", root.element("imageExplanation").getName());
+        assertEquals("dataExplanation", root.element("dataExplanation").getName());
+        
+        //checks the number of attributes and elements in the chunks in order to
+        //ensure that the chunk headers were not inserted
+        assertEquals(0, root.element("textualExplanation").attributes().size());
+        assertEquals(0, root.element("imageExplanation").attributes().size());
+        assertEquals(0, root.element("dataExplanation").attributes().size());
+        assertEquals(1, root.element("textualExplanation").elements().size());
+        assertEquals(1, root.element("imageExplanation").elements().size());
+        assertEquals(1, root.element("dataExplanation").elements().size());
+
+
     }
-
-    /**
-     * Test of buildReport method, of class XMLReportBuilder.
-     * Test case: unsuccessful building of a chunk because of the First null argument
-     */
-    public void testBuildReportMissingFirstArgument() {
-        try {
-            builder.buildReport(null, document1);
-            fail("Exception should have been thrown, but it wasn't");
-        } catch (Exception e) {
-            String result = e.getMessage();
-            String expResult = "The argument 'explanation' is mandatory, so it can not be null";
-            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
-            assertEquals(expResult, result);
-        }
-    }
-
-    /**
-     * Test of buildReport method, of class XMLReportBuilder.
-     * Test case: unsuccessful building of a chunk because of the second null argument
-     */
-    public void testBuildReportMissingSecondArgument() {
-
-        Object object = null;
-        try {
-            builder.buildReport(explanation1, object);
-            fail("Exception should have been thrown, but it wasn't");
-        } catch (Exception e) {
-            String result = e.getMessage();
-            String expResult = "The argument 'stream' is mandatory, so it can not be null";
-            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
-            assertEquals(expResult, result);
-        }
-    }
-
 
     /**
      * Test of buildReport method, of class XMLReportBuilder.
@@ -268,7 +210,7 @@ public class XMLReportBuilderTest extends TestCase {
      */
     public void testBuildReportWrongTypeSecondArgument() {
         try {
-            builder.buildReport(explanation1, new Object());
+            instance.buildReport(explanation1, new Object());
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -284,7 +226,7 @@ public class XMLReportBuilderTest extends TestCase {
      * using Explanation constructor that only has "owner" attribute.
      */
     public void testInsertHeader() {
-        builder.insertHeader(explanation1, document1);
+        ((XMLReportBuilder)instance).insertHeader(explanation1, document1);
 
         Element root = document1.getRootElement();
 
@@ -294,7 +236,7 @@ public class XMLReportBuilderTest extends TestCase {
 
         //checks the values of attributes
         assertEquals("tester", root.attribute("owner").getText());
-        assertEquals(String.valueOf(explanation1.getCreated().getTimeInMillis()), root.attribute("date").getText());
+        assertEquals(DateFormat.getInstance().format(explanation2.getCreated().getTime()), root.attribute("date").getText());
     }
 
     /**
@@ -303,19 +245,20 @@ public class XMLReportBuilderTest extends TestCase {
      * using Explanation constructor that only has all the attributes.
      */
     public void testInsertHeaderAllInfo() {
-        builder.insertHeader(explanation2, document1);
+        ((XMLReportBuilder)instance).insertHeader(explanation2, document1);
 
         Element root = document1.getRootElement();
 
         //checks the number of attributes and elements
-        assertEquals(4, root.attributes().size());
+        assertEquals(5, root.attributes().size());
         assertEquals(0, root.elements().size());
 
         //checks the values of attributes
         assertEquals("tester", root.attribute("owner").getText());
         assertEquals("EN", root.attribute("language").getText());
         assertEquals("USA", root.attribute("country").getText());
-        assertEquals(String.valueOf(explanation2.getCreated().getTimeInMillis()), root.attribute("date").getText());
+        assertEquals(DateFormat.getInstance().format(explanation2.getCreated().getTime()), root.attribute("date").getText());
+        assertEquals("explanation title", root.attribute("title").getText());
 
 
     }
@@ -326,7 +269,7 @@ public class XMLReportBuilderTest extends TestCase {
      */
     public void testInsertHeaderMissingAllArgument() {
         try {
-            builder.insertHeader(null, null);
+            ((XMLReportBuilder)instance).insertHeader(null, null);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -342,7 +285,7 @@ public class XMLReportBuilderTest extends TestCase {
      */
     public void testInsertHeaderMissingFirstArgument() {
         try {
-            builder.insertHeader(null, document1);
+            ((XMLReportBuilder)instance).insertHeader(null, document1);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -358,7 +301,7 @@ public class XMLReportBuilderTest extends TestCase {
      */
     public void testInsertHeaderMissingSecondArgument() {
         try {
-            builder.insertHeader(explanation1, null);
+            ((XMLReportBuilder)instance).insertHeader(explanation1, null);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -376,7 +319,7 @@ public class XMLReportBuilderTest extends TestCase {
      */
     public void testInsertHeaderWrongTypeSecondArgument() {
         try {
-            builder.insertHeader(explanation1, "test");
+            ((XMLReportBuilder)instance).insertHeader(explanation1, "test");
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();

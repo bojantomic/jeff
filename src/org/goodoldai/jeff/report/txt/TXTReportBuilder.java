@@ -23,6 +23,7 @@ import org.goodoldai.jeff.explanation.ExplanationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
 import org.goodoldai.jeff.report.ReportBuilder;
 import org.goodoldai.jeff.report.ReportChunkBuilderFactory;
 
@@ -56,29 +57,24 @@ public class TXTReportBuilder extends ReportBuilder {
      * report
      * @param filepath a string representing an URL for the file
      *
-     * @throws explanation.ExplanationException if any of the arguments are null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are null
      * or if filepath is an empty string
      */
     public void buildReport(Explanation explanation, String filepath) {
 
-        if (explanation == null && filepath == null) {
-            throw new ExplanationException("All of the arguments are mandatory, so they can not be null");
-        }
-
         if (explanation == null) {
-            throw new ExplanationException("The argument 'explanation' is mandatory, so it can not be null");
+            throw new ExplanationException("The entered explanation must not be null");
         }
 
         if (filepath == null || filepath.isEmpty()) {
-            throw new ExplanationException("The argument 'filepath' must not be null or empty string");
+            throw new ExplanationException("The entered filepath must not be null or empty string");
         }
 
         try {
             PrintWriter writer = new PrintWriter(new File(filepath));
-            writer.write("Report\n");
-            
+
             buildReport(explanation, writer);
-            
+
             writer.close();
 
         } catch (FileNotFoundException ex) {
@@ -89,7 +85,7 @@ public class TXTReportBuilder extends ReportBuilder {
     /**
      * This method inserts the header into the text report. The header consists 
      * of general data collected from the explanation (date and time created, 
-     * owner, language and locale). If any of this data is missing, it is not 
+     * owner, title, language and country). If any of this data is missing, it is not
      * inserted into the report. Since the report format is text, the provided 
      * output stream should be an instance of java.io.PrintWriter.
      * 
@@ -98,11 +94,11 @@ public class TXTReportBuilder extends ReportBuilder {
      * @param stream output stream that the header is supposed to
      * be inserted into
      * 
-     * @throws explanation.ExplanationException if any of the arguments
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments
      * are null or if the entered output stream type is not java.io.PrintWriter
      */
     protected void insertHeader(Explanation explanation, Object stream) {
-        
+
         if (explanation == null && stream == null) {
             throw new ExplanationException("All of the arguments are mandatory, so they can not be null");
         }
@@ -120,11 +116,12 @@ public class TXTReportBuilder extends ReportBuilder {
         }
 
         PrintWriter writer = (PrintWriter) stream;
-
-        String date = Long.toString(explanation.getCreated().getTimeInMillis());
+        
+        String date = DateFormat.getInstance().format(explanation.getCreated().getTime());
         String owner = explanation.getOwner();
         String language = explanation.getLanguage();
         String country = explanation.getCountry();
+        String title = explanation.getTitle();
 
         if (date != null) {
             writer.write("Creation date: " + date + "\n");
@@ -135,11 +132,17 @@ public class TXTReportBuilder extends ReportBuilder {
         }
 
         if (language != null) {
-            writer.write("The language on wich report is created in is: " + language + "\n");
+            writer.write("The language used: " + language + "\n");
         }
 
         if (country != null) {
             writer.write("The country is: " + country + "\n");
+        }
+        
+        writer.write("\n");
+
+        if (title != null) {
+            writer.write(title + "\n\n");
         }
     }
 }

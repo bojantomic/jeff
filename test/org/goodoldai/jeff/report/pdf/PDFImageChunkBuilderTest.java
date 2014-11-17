@@ -86,7 +86,7 @@ public class PDFImageChunkBuilderTest extends TestCase {
     public void testBuildReportChunkNullChunk() {
 
         try {
-            instance.buildReportChunk(null, doc);
+            instance.buildReportChunk(null, doc, false);
             fail("An exception should have been thrown but wasn't");
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
@@ -103,7 +103,7 @@ public class PDFImageChunkBuilderTest extends TestCase {
     public void testBuildReportChunkNullStream() {
 
         try {
-            instance.buildReportChunk(ichunk, null);
+            instance.buildReportChunk(ichunk, null, false);
             fail("An exception should have been thrown but wasn't");
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
@@ -122,7 +122,7 @@ public class PDFImageChunkBuilderTest extends TestCase {
                 new TextExplanationChunk("Sample text");
 
         try {
-            instance.buildReportChunk(tchunk, doc);
+            instance.buildReportChunk(tchunk, doc, false);
             fail("An exception should have been thrown but wasn't");
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
@@ -139,7 +139,7 @@ public class PDFImageChunkBuilderTest extends TestCase {
     public void testBuildReportChunkWrongTypeStream() {
 
         try {
-            instance.buildReportChunk(ichunk, new Object());
+            instance.buildReportChunk(ichunk, new Object(), false);
             fail("An exception should have been thrown but wasn't");
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
@@ -157,7 +157,7 @@ public class PDFImageChunkBuilderTest extends TestCase {
         imagedata.setURL("DOG.jpg");
 
         try {
-            instance.buildReportChunk(ichunk, doc);
+            instance.buildReportChunk(ichunk, doc, false);
             fail("An exception should have been thrown but wasn't");
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
@@ -172,7 +172,7 @@ public class PDFImageChunkBuilderTest extends TestCase {
      * Test case: successfull execution - image caption present
      */
     public void testBuildReportChunkSuccessfull1() {
-        instance.buildReportChunk(ichunk, doc);
+        instance.buildReportChunk(ichunk, doc, true);
 
         ArrayList<Object[]> events = docListener.getCapturedEvents();
 
@@ -211,7 +211,7 @@ public class PDFImageChunkBuilderTest extends TestCase {
     public void testBuildReportChunkSuccessfull2() {
         imagedata.setCaption(null);
 
-        instance.buildReportChunk(ichunk, doc);
+        instance.buildReportChunk(ichunk, doc, true);
 
         ArrayList<Object[]> events = docListener.getCapturedEvents();
 
@@ -236,6 +236,26 @@ public class PDFImageChunkBuilderTest extends TestCase {
 
         //Check the fifth event - chunk content added as image object
         event = events.get(4);
+        confirmImageAdded(event, imagedata.getURL());
+    }
+
+    /**
+     * Test of buildReportChunk method, of class PDFImageChunkBuilder.
+     * Test case: successfull execution - image caption is not present and no
+     * chunk headers are inserted
+     */
+    public void testBuildReportChunkSuccessfull3() {
+        imagedata.setCaption(null);
+
+        instance.buildReportChunk(ichunk, doc, false);
+
+        ArrayList<Object[]> events = docListener.getCapturedEvents();
+
+        //Check that there has been 1 element added - 1 event
+        assertTrue(events.size() == 1);
+
+        //Check the first event - chunk content added as paragraph
+        Object[] event = events.get(0);
         confirmImageAdded(event, imagedata.getURL());
     }
 

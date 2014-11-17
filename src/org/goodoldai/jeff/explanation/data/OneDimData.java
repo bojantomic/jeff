@@ -19,6 +19,7 @@
 package org.goodoldai.jeff.explanation.data;
 
 import java.util.ArrayList;
+import org.goodoldai.jeff.explanation.ExplanationException;
 
 /**
  * This class represents an array of data (from the same dimension) like 
@@ -61,12 +62,12 @@ public class OneDimData implements Cloneable{
      *
      * @param val Dimension object related to this data
      * 
-     * @throws explanation.ExplanationException
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
      * if the entered object is null
      */
     public void setDimension(Dimension val) {
         if (val == null) {
-            throw new org.goodoldai.jeff.explanation.ExplanationException("You have to set dimensions related to this data");
+            throw new ExplanationException("You have to set dimensions related to this data");
         }
         this.dimension = val;
     }
@@ -86,19 +87,19 @@ public class OneDimData implements Cloneable{
      * @param val array of objects containing data values
      * (all objects must be instances of the same class)
      * 
-     * @throws explanation.ExplanationException
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
      * if the entered array is empty, null, or
      * its elements are not from the same type.
      */
     public void setValues(ArrayList<Object> val) {
         if (val == null || val.isEmpty()) {
-            throw new org.goodoldai.jeff.explanation.ExplanationException("You have to set an array of objects containing data values");
+            throw new ExplanationException("You have to set an array of objects containing data values");
         }
 
         //Checking if the array elements are from the same type.
         for (int i = 1; i < val.size(); i++) {
             if (!val.get(0).getClass().getName().equals(val.get(i).getClass().getName())) {
-                throw new org.goodoldai.jeff.explanation.ExplanationException("The entered array elements must be from the same type");
+                throw new ExplanationException("The entered array elements must be from the same type");
             }
         }
         this.values = val;

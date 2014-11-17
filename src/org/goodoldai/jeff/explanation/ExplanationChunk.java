@@ -122,6 +122,17 @@ public abstract class ExplanationChunk implements Cloneable {
      */
     public static final int VERY_NEGATIVE = -2;
     /**
+     * Static constant representing a "strategy" context.
+     *
+     * When the "context" attribute is set to this value, it means that the chunks
+     * content refers to some strategic conclusion. This conclusion refers to the
+     * "strategy" type of expert system explanation as it effects future
+     * inferences on a strategic level (e.g. "It can be determined that the car
+     * malfunction is in the electrical system, so future inference is focused on
+     * it").
+     */
+    public static final int STRATEGIC = 10;
+    /**
      * The information contained in the explanation can be a warning, error, 
      * alert or just informational. This is referred to as context.
      *
@@ -219,7 +230,7 @@ public abstract class ExplanationChunk implements Cloneable {
      *
      * @param val chunk content
      *
-     * @throws explanation.ExplanationException if the entered content is null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the entered content is null
      * or in some way inadequate.
      */
     public abstract void setContent(Object val);

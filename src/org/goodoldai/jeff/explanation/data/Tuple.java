@@ -18,6 +18,8 @@
  */
 package org.goodoldai.jeff.explanation.data;
 
+import org.goodoldai.jeff.explanation.ExplanationException;
+
 /**
  * This class represents a tuple - two related data values.
  *
@@ -60,11 +62,12 @@ public class Tuple implements Cloneable{
      * 
      * @param val object containing the value
      *
-     * @throws explanation.ExplanationException if the entered object is null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
+     * if the entered object is null
      */
     public void setValue1(Object val) {
         if (val == null) {
-            throw new org.goodoldai.jeff.explanation.ExplanationException("You must enter a data value");
+            throw new ExplanationException("You must enter a data value");
         }
         this.value1 = val;
     }
@@ -83,12 +86,12 @@ public class Tuple implements Cloneable{
      * 
      * @param val object containing the value
      *
-     * @throws explanation.ExplanationException if the entered
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the entered
      * object is null
      */
     public void setValue2(Object val) {
         if (val == null) {
-            throw new org.goodoldai.jeff.explanation.ExplanationException("You must enter a data value");
+            throw new ExplanationException("You must enter a data value");
         }
         this.value2 = val;
     }

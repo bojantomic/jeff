@@ -52,7 +52,7 @@ public abstract class ExplanationBuilder {
      * @param factory a factory for
      * returning appropriate explanation chunk builder instances
      *
-     * @throws explanation.ExplanationException
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
      * if any of the entered arguments is null
      */
     public ExplanationBuilder (Explanation e, ExplanationChunkBuilderFactory factory) {

@@ -19,6 +19,7 @@
 package org.goodoldai.jeff.explanation.builder;
 
 import org.goodoldai.jeff.explanation.ExplanationException;
+import org.goodoldai.jeff.explanation.builder.internationalization.InternationalizationManager;
 
 /**
  * A default implementation of the ExplanationChunkBuilderFactory inteface 
@@ -30,28 +31,35 @@ import org.goodoldai.jeff.explanation.ExplanationException;
 public class DefaultExplanationChunkBuilderFactory implements ExplanationChunkBuilderFactory {
 
     /**
-     * A TextExplanationChunkBuilder instance which is "lazy initialized"
-     * and cached for future use.
+     * This is an instance of the InternationalizationManager which
+     * will be used for translating content.
      */
-    private TextExplanationChunkBuilder textExplanationChunkBuilder;
-    /**
-     * An ImageExplanationChunkBuilder instance which is "lazy initialized"
-     * and cached for future use.
-     */
-    private ImageExplanationChunkBuilder imageExplanationChunkBuilder;
-    /**
-     * A DataExplanationChunkBuilder instance which is "lazy initialized"
-     * and cached for future use.
-     */
-    private DataExplanationChunkBuilder dataExplanationChunkBuilder;
+    private InternationalizationManager i18nManager;
 
     /**
-     * Initializes all attributes (chunk builder references) to null.
+     * A DefaultTextExplanationChunkBuilder instance which is "lazy initialized"
+     * and cached for future use.
+     */
+    private DefaultTextExplanationChunkBuilder textExplanationChunkBuilder;
+    /**
+     * A DefaultImageExplanationChunkBuilder instance which is "lazy initialized"
+     * and cached for future use.
+     */
+    private DefaultImageExplanationChunkBuilder imageExplanationChunkBuilder;
+    /**
+     * A DefaultDataExplanationChunkBuilder instance which is "lazy initialized"
+     * and cached for future use.
+     */
+    private DefaultDataExplanationChunkBuilder dataExplanationChunkBuilder;
+
+    /**
+     * Initializes all attributes to null.
      */
     public DefaultExplanationChunkBuilderFactory() {
         textExplanationChunkBuilder = null;
         imageExplanationChunkBuilder = null;
         dataExplanationChunkBuilder = null;
+        i18nManager = null;
     }
 
     /**
@@ -61,12 +69,12 @@ public class DefaultExplanationChunkBuilderFactory implements ExplanationChunkBu
      * method would return a DefaultDataExplanationChunkBuilder instance.It 
      * is necessary to state that chunk builder instances are "lazy initialized"
      * and cached (as attributes) while the factory instance exists. This
-     * means that, for example, ImageExplanationChunkBuilder attribute is null
+     * means that, for example, DefaultImageExplanationChunkBuilder attribute is null
      * when the factory is created and initialized only when the first
-     * ImageExplanationChunkBuilder instance is needed and not before.
+     * DefaultImageExplanationChunkBuilder instance is needed and not before.
      * In all subsequent calls when this method is supposed to return a
-     * ImageExplanationChunkBuilder instance it returns the reference to 
-     * the already initialized ImageExplanationChunkBuilder object.
+     * DefaultImageExplanationChunkBuilder instance it returns the reference to
+     * the already initialized DefaultImageExplanationChunkBuilder object.
      *
      * @param type explanation chunk type for which a builder is
      * needed (concrete values are represented as static constants TEXT, DATA 
@@ -75,12 +83,17 @@ public class DefaultExplanationChunkBuilderFactory implements ExplanationChunkBu
      * @return the appropriate explanation chunk builder instance for
      * the entered chunk type
      *
-     * @throws explanation.ExplanationException if the type was not recognized
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the type was not recognized
+     * or if the i18nManager has not been initialized
      */
     public ExplanationChunkBuilder getExplanationChunkBuilder(int type) {
+        if (i18nManager == null)
+            throw new ExplanationException("The i18nManager has not been set");
+
         if (type == TEXT) {
             if (textExplanationChunkBuilder == null) {
-                textExplanationChunkBuilder = new TextExplanationChunkBuilder();
+                textExplanationChunkBuilder = 
+                        new DefaultTextExplanationChunkBuilder(i18nManager);
             }
 
             return textExplanationChunkBuilder;
@@ -88,7 +101,8 @@ public class DefaultExplanationChunkBuilderFactory implements ExplanationChunkBu
 
         if (type == IMAGE) {
             if (imageExplanationChunkBuilder == null) {
-                imageExplanationChunkBuilder = new ImageExplanationChunkBuilder();
+                imageExplanationChunkBuilder = 
+                        new DefaultImageExplanationChunkBuilder(i18nManager);
             }
 
             return imageExplanationChunkBuilder;
@@ -96,7 +110,8 @@ public class DefaultExplanationChunkBuilderFactory implements ExplanationChunkBu
 
         if (type == DATA) {
             if (dataExplanationChunkBuilder == null) {
-                dataExplanationChunkBuilder = new DataExplanationChunkBuilder();
+                dataExplanationChunkBuilder = 
+                        new DefaultDataExplanationChunkBuilder(i18nManager);
             }
 
             return dataExplanationChunkBuilder;
@@ -104,6 +119,23 @@ public class DefaultExplanationChunkBuilderFactory implements ExplanationChunkBu
 
         //Explanation chunk type was not recognized
         throw new ExplanationException("Chunk type '"+type+"' was not recognized");
+    }
+    
+    /**
+     * Sets the i18nManager which will be used for translating content.
+     *
+     * @param i18nManager An instance of the InternationalizationManager.
+     *
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the entered i18nManager
+     * instance is null.
+     *
+     */
+    public void setI18nManager(InternationalizationManager i18nManager){
+        if (i18nManager == null)
+            throw new ExplanationException("The i18nManager cannot be null");
+
+        this.i18nManager = i18nManager;
+        
     }
 }
 

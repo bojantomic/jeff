@@ -30,13 +30,13 @@ import org.goodoldai.jeff.report.ReportChunkBuilder;
 /**
  * @author Boris Horvat
  */
-public class XMLReportBuilderChunkFactoryTest extends TestCase {
+public class XMLReportChunkBuilderFactoryTest extends TestCase {
 
-    XMLReportBuilderChunkFactory instance;
+    XMLReportChunkBuilderFactory instance;
 
     @Override
     protected void setUp(){
-        instance = new XMLReportBuilderChunkFactory();
+        instance = new XMLReportChunkBuilderFactory();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class XMLReportBuilderChunkFactoryTest extends TestCase {
     }
     
     /**
-     * Test of getReportChunkBuilder method, of class XMLReportBuilderChunkFactory.
+     * Test of getReportChunkBuilder method, of class XMLReportChunkBuilderFactory.
      * Test case: unsuccessful execution - chunk type not recognized
      */
     public void testGetXMLReportChunkBuilderTypeNotRecognized() {
@@ -61,7 +61,7 @@ public class XMLReportBuilderChunkFactoryTest extends TestCase {
     }
 
     /**
-     * Test of getReportChunkBuilder method, of class XMLReportBuilderChunkFactory.
+     * Test of getReportChunkBuilder method, of class XMLReportChunkBuilderFactory.
      * Test case: successful execution, passing of TEXT Explanation Chunk type
      */
     public void testGetXMLReportChunkBuilderText1() {
@@ -72,7 +72,7 @@ public class XMLReportBuilderChunkFactoryTest extends TestCase {
     }
 
     /**
-     * Test of getReportChunkBuilder method, of class XMLReportBuilderChunkFactory.
+     * Test of getReportChunkBuilder method, of class XMLReportChunkBuilderFactory.
      * Test case: successful execution, passing of TEXT Explanation chunk type, assert returning
      * of same instance every time
      */
@@ -89,7 +89,7 @@ public class XMLReportBuilderChunkFactoryTest extends TestCase {
     }
 
     /**
-     * Test of getReportChunkBuilder method, of class XMLReportBuilderChunkFactory.
+     * Test of getReportChunkBuilder method, of class XMLReportChunkBuilderFactory.
      * Test case: successful execution, passing of IMAGE Explanation chunk type
      */
     public void testGetXMLReportChunkBuilderImage1() {
@@ -100,7 +100,7 @@ public class XMLReportBuilderChunkFactoryTest extends TestCase {
     }
 
     /**
-     * Test of getReportChunkBuilder method, of class XMLReportBuilderChunkFactory.
+     * Test of getReportChunkBuilder method, of class XMLReportChunkBuilderFactory.
      * Test case: successful execution, passing of  IMAGE Explanation chunk type, assert returning
      * of same instance every time
      */
@@ -117,7 +117,7 @@ public class XMLReportBuilderChunkFactoryTest extends TestCase {
     }
 
     /**
-     * Test of getReportChunkBuilder method, of class XMLReportBuilderChunkFactory.
+     * Test of getReportChunkBuilder method, of class XMLReportChunkBuilderFactory.
      * Test case: successful execution, passing of DATA Explanation chunk type
      */
     public void testGetXMLReportChunkBuilderData1() {
@@ -129,7 +129,7 @@ public class XMLReportBuilderChunkFactoryTest extends TestCase {
     }
 
     /**
-     * Test of getReportChunkBuilder method, of class XMLReportBuilderChunkFactory.
+     * Test of getReportChunkBuilder method, of class XMLReportChunkBuilderFactory.
      * Test case: successful execution, passing of  DATA Explanation chunk type, assert returning
      * of same instance every time
      */

@@ -38,7 +38,7 @@ import junit.framework.TestCase;
 /**
  * @author Bojan Tomic
  */
-public class DataExplanationChunkBuilderTest extends TestCase {
+public class DefaultDataExplanationChunkBuilderTest extends TestCase {
 
     SingleData sdata = null;
     OneDimData odata = null;
@@ -51,7 +51,8 @@ public class DataExplanationChunkBuilderTest extends TestCase {
     File unit = null;
     File dimensionNames = null;
     File imageCaptions = null;
-    DataExplanationChunkBuilder instance = null;
+    InternationalizationManager im = null;
+    DefaultDataExplanationChunkBuilder instance = null;
 
     @Override
     protected void setUp() throws Exception {
@@ -103,7 +104,10 @@ public class DataExplanationChunkBuilderTest extends TestCase {
 
         //The internationalization manager needs to be initialized before
         //explanation builders can use it
-        InternationalizationManager.initializeManager(new Locale("srb", "RS"));
+        im = new InternationalizationManager(new Locale("srb", "RS"));
+
+        //Initialize the builder instance
+        instance = new DefaultDataExplanationChunkBuilder(im);
     }
 
     @Override
@@ -114,11 +118,27 @@ public class DataExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class DataExplanationChunkBuilder.
+     * Test of constructor, of class DefaultDataExplanationChunkBuilder.
+     * Test case: unsuccessfull execution - i18nManager is null
+     */
+    public void testConstructori18nManagerNull() {
+        try {
+            instance= new DefaultDataExplanationChunkBuilder(null);
+            fail("Exception should have been thrown, but it wasn't");
+        } catch (Exception e) {
+            String result = e.getMessage();
+            String expResult = "The entered i18nManager instance must not be null";
+            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
+            assertEquals(expResult, result);
+        }
+
+    }
+
+    /**
+     * Test of buildChunk method, of class DefaultDataExplanationChunkBuilder.
      * Test case: unsuccessfull execution - content is null
      */
     public void testBuildChunkNullContent() {
-        instance = new DataExplanationChunkBuilder();
         try {
             instance.buildChunk(context, group, rule, tags, null);
             fail("Exception should have been thrown, but it wasn't");
@@ -133,11 +153,10 @@ public class DataExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class DataExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultDataExplanationChunkBuilder.
      * Test case: unsuccessfull execution - wrong type content
      */
     public void testBuildChunkWrongTypeContent() {
-        instance = new DataExplanationChunkBuilder();
         try {
             instance.buildChunk(context, group, rule, tags, "wrong type");
             fail("Exception should have been thrown, but it wasn't");
@@ -152,12 +171,11 @@ public class DataExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class DataExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultDataExplanationChunkBuilder.
      * Test case: successfull execution - SingleData content
      */
     public void testBuildChunkSuccessfullSingleData1() {
-        instance = new DataExplanationChunkBuilder();
-
+        
         DataExplanationChunk dc =
                 (DataExplanationChunk) (instance.buildChunk(context, group, rule, tags, sdata));
 
@@ -176,12 +194,11 @@ public class DataExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class DataExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultDataExplanationChunkBuilder.
      * Test case: successfull execution - SingleData content, no unit
      */
     public void testBuildChunkSuccessfullSingleData2() {
-        instance = new DataExplanationChunkBuilder();
-
+        
         //Set the unit to null
         sdata.getDimension().setUnit(null);
 
@@ -203,13 +220,12 @@ public class DataExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class DataExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultDataExplanationChunkBuilder.
      * Test case: successfull execution - SingleData content, no dimension
      * name translation, no unit name translation
      */
     public void testBuildChunkSuccessfullSingleData3() {
-        instance = new DataExplanationChunkBuilder();
-
+        
         //Set the dimension name and unit so that no translation exists
         sdata.getDimension().setName("cash");
         sdata.getDimension().setUnit("YEN");
@@ -231,12 +247,11 @@ public class DataExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class DataExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultDataExplanationChunkBuilder.
      * Test case: successfull execution - OneDimData content
      */
     public void testBuildChunkSuccessfullOneDimData() {
-        instance = new DataExplanationChunkBuilder();
-
+        
         DataExplanationChunk dc =
                 (DataExplanationChunk) (instance.buildChunk(context, group, rule, tags, odata));
 
@@ -255,12 +270,11 @@ public class DataExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class DataExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultDataExplanationChunkBuilder.
      * Test case: successfull execution - TwoDimData content
      */
     public void testBuildChunkSuccessfullTwoDimData() {
-        instance = new DataExplanationChunkBuilder();
-
+        
         DataExplanationChunk dc =
                 (DataExplanationChunk) (instance.buildChunk(context, group, rule, tags, twdata));
 
@@ -281,12 +295,11 @@ public class DataExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class DataExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultDataExplanationChunkBuilder.
      * Test case: successfull execution - ThreeDimData content
      */
     public void testBuildChunkSuccessfullThreeDimData() {
-        instance = new DataExplanationChunkBuilder();
-
+        
         DataExplanationChunk dc =
                 (DataExplanationChunk) (instance.buildChunk(context, group, rule, tags, thdata));
 

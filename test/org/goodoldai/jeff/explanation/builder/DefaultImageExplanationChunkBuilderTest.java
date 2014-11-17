@@ -31,7 +31,7 @@ import junit.framework.TestCase;
 /**
  * @author Bojan Tomic
  */
-public class ImageExplanationChunkBuilderTest extends TestCase {
+public class DefaultImageExplanationChunkBuilderTest extends TestCase {
 
     ImageData imagedata = null;
     int context = 0;
@@ -43,7 +43,8 @@ public class ImageExplanationChunkBuilderTest extends TestCase {
     File dimensionNames = null;
     File imageCaptions = null;
 
-    ImageExplanationChunkBuilder instance = null;
+    InternationalizationManager im = null;
+    DefaultImageExplanationChunkBuilder instance = null;
 
     @Override
     protected void setUp() throws Exception {
@@ -80,7 +81,10 @@ public class ImageExplanationChunkBuilderTest extends TestCase {
 
         //The internationalization manager needs to be initialized before
         //explanation builders can use it
-        InternationalizationManager.initializeManager(new Locale("srb", "RS"));
+        im = new InternationalizationManager(new Locale("srb", "RS"));
+
+        //Initialize the builder instance
+        instance = new DefaultImageExplanationChunkBuilder(im);
 
     }
 
@@ -91,12 +95,28 @@ public class ImageExplanationChunkBuilderTest extends TestCase {
         imageCaptions.delete();
     }
 
+     /**
+     * Test of constructor, of class DefaultImageExplanationChunkBuilder.
+     * Test case: unsuccessfull execution - i18nManager is null
+     */
+    public void testConstructori18nManagerNull() {
+        try {
+            instance= new DefaultImageExplanationChunkBuilder(null);
+            fail("Exception should have been thrown, but it wasn't");
+        } catch (Exception e) {
+            String result = e.getMessage();
+            String expResult = "The entered i18nManager instance must not be null";
+            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
+            assertEquals(expResult, result);
+        }
+
+    }
+
     /**
-     * Test of buildChunk method, of class ImageExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultImageExplanationChunkBuilder.
      * Test case: unsuccessfull execution - content is null
      */
     public void testBuildChunkNullContent() {
-        instance = new ImageExplanationChunkBuilder();
         try {
             instance.buildChunk(context, group, rule, tags, null);
             fail("Exception should have been thrown, but it wasn't");
@@ -110,11 +130,10 @@ public class ImageExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class ImageExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultImageExplanationChunkBuilder.
      * Test case: unsuccessfull execution - wrong type content
      */
     public void testBuildChunkWrongTypeContent() {
-        instance = new ImageExplanationChunkBuilder();
         try {
             instance.buildChunk(context, group, rule, tags, "content");
             fail("Exception should have been thrown, but it wasn't");
@@ -128,12 +147,10 @@ public class ImageExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class ImageExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultImageExplanationChunkBuilder.
      * Test case: successfull execution - caption is null
      */
     public void testBuildChunkSuccessfull1() {
-        instance = new ImageExplanationChunkBuilder();
-
         imagedata.setCaption(null);
 
         ImageExplanationChunk imc =
@@ -153,12 +170,10 @@ public class ImageExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class ImageExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultImageExplanationChunkBuilder.
      * Test case: successfull execution - translation is performed
      */
     public void testBuildChunkSuccessfull2() {
-        instance = new ImageExplanationChunkBuilder();
-
         ImageExplanationChunk imc =
                 (ImageExplanationChunk) (instance.buildChunk(context, group, rule, tags, imagedata));
 
@@ -176,12 +191,10 @@ public class ImageExplanationChunkBuilderTest extends TestCase {
     }
 
     /**
-     * Test of buildChunk method, of class ImageExplanationChunkBuilder.
+     * Test of buildChunk method, of class DefaultImageExplanationChunkBuilder.
      * Test case: successfull execution - translation does not exist
      */
     public void testBuildChunkSuccessfull3() {
-        instance = new ImageExplanationChunkBuilder();
-
         imagedata.setCaption("Unknown picture");
 
         ImageExplanationChunk imc =

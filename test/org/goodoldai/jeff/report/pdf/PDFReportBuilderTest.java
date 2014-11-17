@@ -53,7 +53,7 @@ public class PDFReportBuilderTest extends ReportBuilderTest {
     @Override
     protected void setUp() {
         //Set up a sample explanation
-        explanation = new Explanation("OWNER", "EN", "USA");
+        explanation = new Explanation("OWNER", "EN", "USA", "Explanation title");
         explanation.addChunk(new TextExplanationChunk("textTest"));
         explanation.addChunk(new ImageExplanationChunk(new ImageData("WHALE.JPG")));
 

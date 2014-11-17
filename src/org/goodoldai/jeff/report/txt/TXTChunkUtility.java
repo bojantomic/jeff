@@ -24,21 +24,28 @@ import java.io.PrintWriter;
 import java.lang.reflect.Field;
 
 /**
- * This class is used to do the utily jobs that are common to all of the XML classes
+ * This class is used to do the utility jobs that are common for TXT report
+ * generation purposes.
  *
  * @author Nemanja jovanovic
  */
-public class TXTUtility {
+public class TXTChunkUtility {
 
     /**
-     * This method inserts the general expelantion information (context, rule, group, tags)
-     * into the xml document
+     * In order to prevent initialization, the constructor is private
+     */
+    private TXTChunkUtility() {
+    }
+
+    /**
+     * This method inserts the general explanation information (context, rule,
+     * group, tags) into the txt document.
      *
      * @param echunk explanation chunk that holds the information that needs to be inserted
-     * @param element in which the content of the transformed chunk will be
-     * written in as an xml document (in this case import java.io.PrintWriter)
+     * @param writer A java.io.PrintWriter instance in which the content of the
+     * transformed chunk will be written in as a txt document
      */
-    public static void insertExplenationInfo(ExplanationChunk echunk, PrintWriter writer) {
+    public static void insertExplanationInfo(ExplanationChunk echunk, PrintWriter writer) {
 
         int cont = echunk.getContext();
         String context = translateContext(cont, echunk);
@@ -62,18 +69,22 @@ public class TXTUtility {
             for (int i = 0; i < tags.length; i++){
                 writer.write(tags[i] + " ");
             }
+            writer.write("\n");
         }
     }
 
     /**
-     * This is a method that is used to translate the context from an integer in the String
+     * This is a method that is used to translate the context from an integer
+     * into a String. This method uses reflection in order to do this.
      *
      * @param context the int representation of explanation context
      * @param echunk explanation chunk that holds the string value of the context
      *
      * @return the string value of the context
      *
-     * @throws ExplanationException is IllegalArgumentException or IllegalAccessException occur
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
+     * In the case of any problems by covering raised IllegalArgumentException or
+     * IllegalAccessException.
      */
     public static String translateContext(int context, ExplanationChunk echunk) {
 

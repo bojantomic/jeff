@@ -73,7 +73,7 @@ public class XMLTextChunkBuilderTest extends TestCase {
      * that only has content.
      */
     public void testBuildReportChunkFirstConstructor() {
-        xmlTextChunkBuilder.buildReportChunk(textEchunk1, document);
+        xmlTextChunkBuilder.buildReportChunk(textEchunk1, document, true);
 
         Element root = document.getRootElement();
 
@@ -111,7 +111,7 @@ public class XMLTextChunkBuilderTest extends TestCase {
      * that has all elements.
      */
     public void testBuildReportChunkSecondConstructor() {
-        xmlTextChunkBuilder.buildReportChunk(textEchunk2, document);
+        xmlTextChunkBuilder.buildReportChunk(textEchunk2, document, true);
 
         Element root = document.getRootElement();
 
@@ -165,11 +165,49 @@ public class XMLTextChunkBuilderTest extends TestCase {
 
     /**
      * Test of buildReportChunk method, of class XMLTextChunkBuilder.
+     * Test case: successful insertion of data using the ExplanationChunk constructor
+     * that has all elements - but no chunk headers are inserted.
+     */
+    public void testBuildReportChunkSecondConstructorNocHunkHeaders() {
+        xmlTextChunkBuilder.buildReportChunk(textEchunk2, document, false);
+
+        Element root = document.getRootElement();
+
+        //the expected values
+        String[] elements = {"content"};
+
+        //checks the number of attributes and elements
+        assertEquals(0, root.attributes().size());
+        assertEquals(1, root.elements().size());
+
+        //checks the name of element
+        for (Iterator it = root.elementIterator(); it.hasNext();) {
+            Element element = (Element) it.next();
+            assertEquals("textualExplanation", element.getName());
+        }
+
+        //checks the number of attributes and elements of the element "textualExplanation"
+        assertEquals(0, root.element("textualExplanation").attributes().size());
+        assertEquals(1, root.element("textualExplanation").elements().size());
+
+        //checks the values and names of elements of the element "textualExplanation"
+        int j = 0;
+        for (Iterator it = root.element("textualExplanation").elementIterator(); it.hasNext();) {
+            Element element = (Element) it.next();
+            assertEquals(elements[j++], element.getName());
+        }
+
+        //checks the values and names of elements of the element "content" (the content)
+        assertEquals("test text", root.element("textualExplanation").element("content").getText());
+    }
+
+    /**
+     * Test of buildReportChunk method, of class XMLTextChunkBuilder.
      * Test case: unsuccessful building of a chunk because of the null arguments
      */
     public void testBuildReportChunkMissingAllArguments() {
         try {
-            xmlTextChunkBuilder.buildReportChunk(null, null);
+            xmlTextChunkBuilder.buildReportChunk(null, null, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -185,7 +223,7 @@ public class XMLTextChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkMissingFirstArgumant() {
         try {
-            xmlTextChunkBuilder.buildReportChunk(null, document);
+            xmlTextChunkBuilder.buildReportChunk(null, document, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -201,7 +239,7 @@ public class XMLTextChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkMissingSecondArgumant() {
         try {
-            xmlTextChunkBuilder.buildReportChunk(textEchunk1, null);
+            xmlTextChunkBuilder.buildReportChunk(textEchunk1, null, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -218,7 +256,7 @@ public class XMLTextChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkWrongTypeFirsArgumant() {
         try {
-            xmlTextChunkBuilder.buildReportChunk(new ImageExplanationChunk(new ImageData("testing.jpg")), document);
+            xmlTextChunkBuilder.buildReportChunk(new ImageExplanationChunk(new ImageData("testing.jpg")), document, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -235,7 +273,7 @@ public class XMLTextChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkWrongTypeSecondArgumant() {
         try {
-            xmlTextChunkBuilder.buildReportChunk(textEchunk1, "test");
+            xmlTextChunkBuilder.buildReportChunk(textEchunk1, "test", false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();

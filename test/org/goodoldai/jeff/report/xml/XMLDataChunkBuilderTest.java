@@ -107,7 +107,7 @@ public class XMLDataChunkBuilderTest extends TestCase {
      * that only has content.
      */
     public void testBuildReportChunkFirsttConstructorSingleData() {
-        xmlDataChunkBuilder.buildReportChunk(singleDataChunk1, document);
+        xmlDataChunkBuilder.buildReportChunk(singleDataChunk1, document, true);
 
         Element root = document.getRootElement();
 
@@ -147,7 +147,7 @@ public class XMLDataChunkBuilderTest extends TestCase {
      * that has all elements and the type is SingleDimDataChunk.
      */
     public void testBuildReportChunkSecondConstructorSingleData() {
-        xmlDataChunkBuilder.buildReportChunk(singleDataChunk2, document);
+        xmlDataChunkBuilder.buildReportChunk(singleDataChunk2, document, true);
 
         Element root = document.getRootElement();
 
@@ -211,10 +211,58 @@ public class XMLDataChunkBuilderTest extends TestCase {
     /**
      * Test of buildReportChunk method, of class XMLDataChunkBuilder.
      * Test case: successful insertion of data using the ExplanationChunk constructor
+     * that has all elements and the type is SingleDimDataChunk - but no chunk
+     * headers are inserted.
+     */
+    public void testBuildReportChunkSecondConstructorSingleDataNoChunkHeaders() {
+        xmlDataChunkBuilder.buildReportChunk(singleDataChunk2, document, false);
+
+        Element root = document.getRootElement();
+
+        //the expected values
+        String[] elements = {"content"};
+
+        //checks the number of attributes and elements
+        assertEquals(0, root.attributes().size());
+        assertEquals(1, root.elements().size());
+
+        //checks the name of element
+        for (Iterator it = root.elementIterator(); it.hasNext();) {
+            Element element = (Element) it.next();
+            assertEquals("dataExplanation", element.getName());
+        }
+
+        //checks the number of attributes and elements of the element "dataExplanation"
+        assertEquals(0, root.element("dataExplanation").attributes().size());
+        assertEquals(1, root.element("dataExplanation").elements().size());
+      
+        //checks the values and names of elements of the element "dataExplanation"
+        int j = 0;
+        for (Iterator it = root.element("dataExplanation").elementIterator(); it.hasNext();) {
+            Element element = (Element) it.next();
+            assertEquals(elements[j++], element.getName());
+        }
+
+        //checks the values and names of elements of the element "dataExplanation" (the content)
+        assertEquals(2, root.element("dataExplanation").element("content").attributes().size());
+        assertEquals(0, root.element("dataExplanation").element("content").elements().size());
+
+        //checks the values and names of elements of the element "value" (the content)
+        assertEquals("testName", root.element("dataExplanation").element("content").attribute("dimensionName").getText());
+        assertEquals("testUnit", root.element("dataExplanation").element("content").attribute("dimensionUnit").getText());
+        assertEquals("content", root.element("dataExplanation").element("content").getName());
+        assertEquals("value", root.element("dataExplanation").element("content").getText());
+
+
+    }
+
+    /**
+     * Test of buildReportChunk method, of class XMLDataChunkBuilder.
+     * Test case: successful insertion of data using the ExplanationChunk constructor
      * that has all elements and the type is OneDimDataChunk.
      */
     public void testBuildReportChunkSecondConstructorOneDimData() {
-        xmlDataChunkBuilder.buildReportChunk(oneDimDataChunk, document);
+        xmlDataChunkBuilder.buildReportChunk(oneDimDataChunk, document, true);
 
         Element root = document.getRootElement();
 
@@ -286,7 +334,7 @@ public class XMLDataChunkBuilderTest extends TestCase {
      * that has all elements and the type is TwoDimDataChunk.
      */
     public void testBuildReportChunkSecondConstructorTwoDimData() {
-        xmlDataChunkBuilder.buildReportChunk(twoDimDataChunk, document);
+        xmlDataChunkBuilder.buildReportChunk(twoDimDataChunk, document, true);
 
         Element root = document.getRootElement();
 
@@ -366,7 +414,7 @@ public class XMLDataChunkBuilderTest extends TestCase {
      * that has all elements and the type is ThreeDimDataChunk.
      */
     public void testBuildReportChunkSecondConstructorThreeDimData() {
-        xmlDataChunkBuilder.buildReportChunk(threeDimDataChunk, document);
+        xmlDataChunkBuilder.buildReportChunk(threeDimDataChunk, document, true);
 
         Element root = document.getRootElement();
 
@@ -446,7 +494,7 @@ public class XMLDataChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkMissingAllArguments() {
         try {
-            xmlDataChunkBuilder.buildReportChunk(null, null);
+            xmlDataChunkBuilder.buildReportChunk(null, null, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -462,7 +510,7 @@ public class XMLDataChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkMissingFirsttArgument() {
         try {
-            xmlDataChunkBuilder.buildReportChunk(null, document);
+            xmlDataChunkBuilder.buildReportChunk(null, document, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -478,7 +526,7 @@ public class XMLDataChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkMissingSecondArgument() {
         try {
-            xmlDataChunkBuilder.buildReportChunk(singleDataChunk1, null);
+            xmlDataChunkBuilder.buildReportChunk(singleDataChunk1, null, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -495,7 +543,7 @@ public class XMLDataChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkWrongTypeFirstArgument() {
         try {
-            xmlDataChunkBuilder.buildReportChunk(new TextExplanationChunk("testing.jpg"), document);
+            xmlDataChunkBuilder.buildReportChunk(new TextExplanationChunk("testing.jpg"), document, false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -512,7 +560,7 @@ public class XMLDataChunkBuilderTest extends TestCase {
      */
     public void testBuildReportChunkWrongTypeSecondArgument() {
         try {
-            xmlDataChunkBuilder.buildReportChunk(singleDataChunk2, "test");
+            xmlDataChunkBuilder.buildReportChunk(singleDataChunk2, "test", false);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();

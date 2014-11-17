@@ -28,6 +28,8 @@ import java.io.*;
  */
 public class InternationalizationManagerTest extends TestCase {
 
+    InternationalizationManager im;
+
     File unit = null;
     File dimensionNames = null;
     File imageCaptions = null;
@@ -69,6 +71,11 @@ public class InternationalizationManagerTest extends TestCase {
         textgrouppw.println("rule3 = donet je zakljucak {1} u {0}");
         textgrouppw.println("rule\\ 4 = donet je zakljucak 4");
         textgrouppw.close();
+
+        //Create an InternationalizationManager instance
+        Locale locale = new Locale("srb", "RS");
+        im = new InternationalizationManager(locale);
+
     }
 
     @Override
@@ -81,13 +88,13 @@ public class InternationalizationManagerTest extends TestCase {
     }
 
     /**
-     * Test of initializeManager method, of class InternationalizationManager.
+     * Test of constructor, of class InternationalizationManager.
      * Test case: unsuccessfull execution - null Locale
      */
     public void testInitializeManagerNullLocale() {
         Locale locale = null;
         try {
-            InternationalizationManager.initializeManager(locale);
+            new InternationalizationManager(locale);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -98,13 +105,13 @@ public class InternationalizationManagerTest extends TestCase {
     }
 
     /**
-     * Test of initializeManager method, of class InternationalizationManager.
+     * Test of constructor, of class InternationalizationManager.
      * Test case: unsuccessfull execution - properties files do not exist
      */
     public void testInitializeManagerNoPropertyFiles() {
         Locale locale = new Locale("eng", "GB");
         try {
-            InternationalizationManager.initializeManager(locale);
+            new InternationalizationManager(locale);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             String result = e.getMessage();
@@ -115,7 +122,7 @@ public class InternationalizationManagerTest extends TestCase {
     }
 
     /**
-     * Test of initializeManager method, of class InternationalizationManager.
+     * Test of constructor, of class InternationalizationManager.
      * Test case: unsuccessfull execution - properties files do not exist
      */
     public void testInitializeManagerNoPropertyFiles2() {
@@ -126,7 +133,7 @@ public class InternationalizationManagerTest extends TestCase {
             unitpw.println("EUR = USD");
             unitpw.close();
 
-            InternationalizationManager.initializeManager(locale);
+            new InternationalizationManager(locale);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
             unit2.delete();
@@ -137,35 +144,12 @@ public class InternationalizationManagerTest extends TestCase {
         }
     }
 
+    
     /**
-     * Test of getManager method, of class InternationalizationManager.
-     * Test case: unsuccessfull execution - manager not initialized
-     * NOTE:IT IS IMPORTANT TO RUN THIS TEST CASE BECAUSE OF SIDE EFFECTS.
-     * ONCE INTIALIZED, NO NEW MANAGER INSTANCES CAN BE CREATED.
-     */
-    public void testGetManagerNotInitialized() {
-        try {
-            InternationalizationManager.getManager();
-            fail("Exception should have been thrown, but it wasn't");
-        } catch (Exception e) {
-            String result = e.getMessage();
-            String expResult = "The internationalization manager has not yet been initialized";
-            assertTrue(e instanceof org.goodoldai.jeff.explanation.ExplanationException);
-            assertEquals(expResult, result);
-        }
-    }
-
-    /**
-     * Test of initializeManager method, of class InternationalizationManager.
+     * Test of constructor, of class InternationalizationManager.
      * Test case: successfull execution
      */
     public void testInitializeManagerSuccessFull() {
-        Locale locale = new Locale("srb", "RS");
-
-        InternationalizationManager.initializeManager(locale);
-
-        InternationalizationManager im = InternationalizationManager.getManager();
-
         //Check that manager was initialized
         assertTrue(im != null);
 
@@ -184,54 +168,10 @@ public class InternationalizationManagerTest extends TestCase {
     }
 
     /**
-     * Test of initializeManager method, of class InternationalizationManager.
-     * Test case: repeated initialization - should have no effect
-     */
-    public void testInitializeManagerRepeatedInitialization() {
-        //Try to initialize the manager that is already initialized.
-        //Since initialization is performed only once (Singleton),
-        //it should have no effect.
-        Locale locale = new Locale("eng", "US");
-        InternationalizationManager.initializeManager(locale);
-        InternationalizationManager im = InternationalizationManager.getManager();
-
-        //Check that manager was initialized
-        assertTrue(im != null);
-
-        //Try a unit translation but with the old locale
-        assertEquals("RSD", im.translateUnit("EUR"));
-
-        //Try dimension name translations but with the old locale
-        assertEquals("razdaljina", im.translateDimensionName("distance"));
-        assertEquals("novac", im.translateDimensionName("money"));
-        assertEquals("dobit (profit)", im.translateDimensionName("profit"));
-
-        //Try image caption translations but with the old locale
-        assertEquals("Fotografija kita", im.translateImageCaption("Whale photo"));
-        assertEquals("Slika 1", im.translateImageCaption("Image 1"));
-
-    }
-
-    /**
-     * Test of getManager method, of class InternationalizationManager.
-     * Test case: successfull execution - always returns same manager instance
-     */
-    public void testGetManagerSuccessfull() {
-        InternationalizationManager im = InternationalizationManager.getManager();
-
-        InternationalizationManager im2 = InternationalizationManager.getManager();
-
-        //Assert that the same instance is always returned
-        assertEquals(im, im2);
-    }
-
-    /**
      * Test of translateUnit method, of class InternationalizationManager.
      * Test case: successfull execution
      */
     public void testTranslateUnit() {
-        InternationalizationManager im = InternationalizationManager.getManager();
-
         String result = im.translateUnit("EUR");
         String expResult = "RSD";
 
@@ -244,8 +184,6 @@ public class InternationalizationManagerTest extends TestCase {
      * Test case: unsuccessfull execution - no translation could be found
      */
     public void testTranslateUnitNoTranslation() {
-        InternationalizationManager im = InternationalizationManager.getManager();
-
         String result = im.translateUnit("DOLLAR");
         String expResult = null;
 
@@ -258,8 +196,6 @@ public class InternationalizationManagerTest extends TestCase {
      * Test case: successfull execution
      */
     public void testTranslateDimensionName() {
-        InternationalizationManager im = InternationalizationManager.getManager();
-
         String result = im.translateDimensionName("money");
         String expResult = "novac";
 
@@ -272,8 +208,6 @@ public class InternationalizationManagerTest extends TestCase {
      * Test case: unsuccessfull execution - no translation could be found
      */
     public void testTranslateDimensionNameNoTranslation() {
-        InternationalizationManager im = InternationalizationManager.getManager();
-
         String result = im.translateDimensionName("weight");
         String expResult = null;
 
@@ -286,8 +220,6 @@ public class InternationalizationManagerTest extends TestCase {
      * Test case: successfull execution
      */
     public void testTranslateImageCaption() {
-        InternationalizationManager im = InternationalizationManager.getManager();
-
         String result = im.translateImageCaption("Whale photo");
         String expResult = "Fotografija kita";
 
@@ -300,8 +232,6 @@ public class InternationalizationManagerTest extends TestCase {
      * Test case: unsuccessfull execution - no translation could be found
      */
     public void testTranslateImageCaptionNotranslation() {
-        InternationalizationManager im = InternationalizationManager.getManager();
-
         String result = im.translateImageCaption("Flower photo");
         String expResult = null;
 
@@ -315,7 +245,6 @@ public class InternationalizationManagerTest extends TestCase {
      */
     public void testTranslateTextRuleIdentifierNull() {
         try {
-            InternationalizationManager im = InternationalizationManager.getManager();
             im.translateText(null, null, null);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
@@ -332,7 +261,6 @@ public class InternationalizationManagerTest extends TestCase {
      */
     public void testTranslateTextRuleIdentifierEmptyString() {
         try {
-            InternationalizationManager im = InternationalizationManager.getManager();
             im.translateText(null, "", null);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
@@ -349,7 +277,6 @@ public class InternationalizationManagerTest extends TestCase {
      */
     public void testTranslateTextGroupPropertiesFileDoesNotExist() {
         try {
-            InternationalizationManager im = InternationalizationManager.getManager();
             im.translateText("Group234", "rule 1", null);
             fail("Exception should have been thrown, but it wasn't");
         } catch (Exception e) {
@@ -365,8 +292,6 @@ public class InternationalizationManagerTest extends TestCase {
      * Test case: unsuccessfull execution - rule identifier doesn't exist
      */
     public void testTranslateTextRuleIdentifierDoesNotExist() {
-        InternationalizationManager im = InternationalizationManager.getManager();
-
         String result = im.translateText(null, "rule 1234", null);
         String expResult = null;
 
@@ -379,8 +304,6 @@ public class InternationalizationManagerTest extends TestCase {
      * Test case: successfull execution - translation when the group name is null
      */
     public void testTranslateTextSuccessfull() {
-        InternationalizationManager im = InternationalizationManager.getManager();
-
         String result = im.translateText(null, "rule 2", null);
         String expResult = "donet je zakljucak 2";
 
@@ -393,8 +316,6 @@ public class InternationalizationManagerTest extends TestCase {
      * an empty string
      */
     public void testTranslateTextSuccessfull2() {
-        InternationalizationManager im = InternationalizationManager.getManager();
-
         String result = im.translateText("", "rule1", null);
         String expResult = "donet je zakljucak 1";
 
@@ -406,8 +327,6 @@ public class InternationalizationManagerTest extends TestCase {
      * Test case: successfull execution - translation when the group name is present
      */
     public void testTranslateTextSuccessfull3() {
-        InternationalizationManager im = InternationalizationManager.getManager();
-
         String result = im.translateText("group 1", "rule 4", null);
         String expResult = "donet je zakljucak 4";
 
@@ -420,8 +339,6 @@ public class InternationalizationManagerTest extends TestCase {
      * present but has white spaces
      */
     public void testTranslateTextSuccessfull4() {
-        InternationalizationManager im = InternationalizationManager.getManager();
-
         String result = im.translateText("  group 1  ", "rule 4", null);
         String expResult = "donet je zakljucak 4";
 
@@ -434,8 +351,6 @@ public class InternationalizationManagerTest extends TestCase {
      * present, and arguments need to be inserted into the translation.
      */
     public void testTranslateTextSuccessfull5() {
-        InternationalizationManager im = InternationalizationManager.getManager();
-
         Object[] arguments = {"poslednjem trenutku", new Integer(3)};
         String result = im.translateText("group 1", "rule3", arguments);
         String expResult = "donet je zakljucak 3 u poslednjem trenutku";

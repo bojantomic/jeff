@@ -64,12 +64,14 @@ public class XMLDataChunkBuilder implements ReportChunkBuilder {
      * @param echunk data explanation chunk that needs to be transformed
      * @param stream output stream to which the transformed chunk will be
      * written in as an xml document (in this case org.dom4j.Document)
+     *  @param insertHeaders denotes if chunk headers should be inserted into the
+     * report (true) or not (false)
      *
-     * @throws explanation.ExplanationException if any of the arguments are
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are
      * null, if the entered chunk is not a DataExplanationChunk instance or if 
      * the entered output stream type is not org.dom4j.Document
      */
-    public void buildReportChunk(ExplanationChunk echunk, Object stream) {
+    public void buildReportChunk(ExplanationChunk echunk, Object stream, boolean insertHeaders) {
 
         if (echunk == null && stream == null) {
             throw new ExplanationException("All of the arguments are mandatory, so they can not be null");
@@ -94,7 +96,8 @@ public class XMLDataChunkBuilder implements ReportChunkBuilder {
         Document document = (Document) stream;
         Element element = document.getRootElement().addElement("dataExplanation");
 
-        XMLChunkUtility.insertExplanationInfo(echunk, element);
+        if (insertHeaders)
+            XMLChunkUtility.insertExplanationInfo(echunk, element);
 
         DataExplanationChunk dataExplenationChunk = (DataExplanationChunk) echunk;
 

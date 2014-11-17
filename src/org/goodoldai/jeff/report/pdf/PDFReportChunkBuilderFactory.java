@@ -70,7 +70,7 @@ public class PDFReportChunkBuilderFactory implements ReportChunkBuilderFactory {
      * @return chunk builder instance that is supposed to be used in order to
      * transform the entered chunk
      *
-     * @throws explanation.ExplanationException if the entered chunk is null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the entered chunk is null
      * or if the appropriate chunk builder for the entered chunk could not be
      * found
      */

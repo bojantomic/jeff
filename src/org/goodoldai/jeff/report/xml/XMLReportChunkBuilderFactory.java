@@ -34,7 +34,7 @@ import org.goodoldai.jeff.report.ReportChunkBuilderFactory;
  *
  * @author Boris Horvat
  */
-public class XMLReportBuilderChunkFactory implements ReportChunkBuilderFactory {
+public class XMLReportChunkBuilderFactory implements ReportChunkBuilderFactory {
 
     /**
      * An XMLDataChunkBuilder instance which is "lazy initialized"
@@ -55,7 +55,7 @@ public class XMLReportBuilderChunkFactory implements ReportChunkBuilderFactory {
     /**
      * Initializes all attributes (chunk builder references) to null.
      */
-    public XMLReportBuilderChunkFactory() {
+    public XMLReportChunkBuilderFactory() {
         this.XMLDataChunkBuilder = null;
         this.XMLImageChunkBuilder = null;
         this.XMLTextChunkBuilder = null;
@@ -82,7 +82,7 @@ public class XMLReportBuilderChunkFactory implements ReportChunkBuilderFactory {
      * @return chunk builder instance that is supposed to be used in order
      * to transform the entered chunk
      *
-     * @throws explanation.ExplanationException if the type was not recognized
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the type was not recognized
      */
     public ReportChunkBuilder getReportChunkBuilder(ExplanationChunk echunk) {
 

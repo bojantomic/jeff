@@ -61,7 +61,7 @@ public class DataExplanationChunk extends ExplanationChunk implements Cloneable 
      *
      * @param val chunk content.
      *
-     * @throws explanation.ExplanationException
+     * @throws org.goodoldai.jeff.explanation.ExplanationException
      * if the entered object is null or is not from the following types:
      * SingleData, OneDimData, TwoDimData or ThreeDimData
      */

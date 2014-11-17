@@ -94,7 +94,7 @@ public class SimpleExplanationBuilderTest extends ExplanationBuilderTest {
 
         dcontent = new SingleData(new Dimension("money", "EUR"), new Double(1700));
 
-        explanation = new Explanation("owner 1", "srb", "RS");
+        explanation = new Explanation("owner 1", "srb", "RS",null);
 
     }
 
@@ -103,7 +103,6 @@ public class SimpleExplanationBuilderTest extends ExplanationBuilderTest {
      * Test case: succesfull execution - text chunk added
      */
     public void testAddExplanationSuccessfullTextChunk() {
-        explanation = new Explanation("owner 1", "srb", "RS");
 
         instance = getInstance(explanation, getFactory());
 
@@ -135,7 +134,6 @@ public class SimpleExplanationBuilderTest extends ExplanationBuilderTest {
      * Test case: succesfull execution - image chunk added
      */
     public void testAddExplanationSuccessfullImageChunk() {
-        explanation = new Explanation("owner 1", "srb", "RS");
 
         instance = getInstance(explanation, getFactory());
 
@@ -169,7 +167,6 @@ public class SimpleExplanationBuilderTest extends ExplanationBuilderTest {
      * Test case: succesfull execution - data chunk added
      */
     public void testAddExplanationSuccessfullDataChunk() {
-        explanation = new Explanation("owner 1", "srb", "RS");
 
         instance = getInstance(explanation, getFactory());
 
@@ -202,7 +199,6 @@ public class SimpleExplanationBuilderTest extends ExplanationBuilderTest {
      * Test case: succesfull execution - three chunks added
      */
     public void testAddExplanationSuccessfullThreeChunks() {
-        explanation = new Explanation("owner 1", "srb", "RS");
 
         instance = getInstance(explanation, getFactory());
 

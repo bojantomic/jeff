@@ -39,7 +39,7 @@ public interface ReportChunkBuilderFactory {
      * @return the appropriate chunk builder instance
      * for the entered chunk and report type
      *
-     * @throws explanation.ExplanationException if the appropriate chunk builder
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if the appropriate chunk builder
      * for the entered chunk could not be found
      */
     public ReportChunkBuilder getReportChunkBuilder (ExplanationChunk echunk);

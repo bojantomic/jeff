@@ -62,6 +62,7 @@ public class ExplanationTest extends TestCase {
         assertEquals(null, instance.getOwner());
         assertEquals(null, instance.getLanguage());
         assertEquals(null, instance.getCountry());
+        assertEquals(null, instance.getTitle());
 
         assertTrue(instance.getChunks() != null);
         assertEquals(0, instance.getChunks().size());
@@ -90,20 +91,52 @@ public class ExplanationTest extends TestCase {
         assertEquals(owner, instance.getOwner());
         assertEquals(null, instance.getLanguage());
         assertEquals(null, instance.getCountry());
+        assertEquals(null, instance.getTitle());
 
         assertTrue(instance.getChunks() != null);
         assertEquals(0, instance.getChunks().size());
     }
 
     /**
-     * Test of three argument constructor, of class Explanation.
+     * Test of two argument constructor, of class Explanation.
      */
-    public void testThreeArgConstructor() {
+    public void testTwoArgConstructor() {
+        String owner = "Peter";
+        String title = "explanation title";
+
+        instance = new Explanation(owner, title);
+
+        //Testing if the "created" attribute is set to
+        //the current date/time. Accuracy is not full
+        //as of the time difference between object creation
+        //moments.
+        GregorianCalendar expresult = new GregorianCalendar();
+        GregorianCalendar result = instance.getCreated();
+
+        //The difference (in milliseconds) between creation moments
+        //must be more or equal to zero but less than 1 second.
+        long milliseconds = expresult.getTimeInMillis() - result.getTimeInMillis();
+        assertTrue(milliseconds >= 0 && milliseconds <= 1000);
+
+        assertEquals(owner, instance.getOwner());
+        assertEquals(null, instance.getLanguage());
+        assertEquals(null, instance.getCountry());
+        assertEquals(title, instance.getTitle());
+
+        assertTrue(instance.getChunks() != null);
+        assertEquals(0, instance.getChunks().size());
+    }
+
+    /**
+     * Test of four argument constructor, of class Explanation.
+     */
+    public void testFourArgConstructor() {
         String owner = "Peter";
         String language = "English";
         String locale = "EN-GB";
+        String title = "explanation title";
 
-        instance = new Explanation(owner, language, locale);
+        instance = new Explanation(owner, language, locale, title);
 
         //Testing if the "created" attribute is set to
         //the current date/time. Accuracy is not full
@@ -120,6 +153,7 @@ public class ExplanationTest extends TestCase {
         assertEquals(owner, instance.getOwner());
         assertEquals(language, instance.getLanguage());
         assertEquals(locale, instance.getCountry());
+        assertEquals(title, instance.getTitle());
 
         assertTrue(instance.getChunks() != null);
         assertEquals(0, instance.getChunks().size());

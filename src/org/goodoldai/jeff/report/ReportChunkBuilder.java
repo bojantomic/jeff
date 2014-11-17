@@ -44,12 +44,14 @@ public interface ReportChunkBuilder {
      * @param echunk explanation chunk that needs to be transformed
      * @param stream output stream to which the transformed chunk will be written as
      * output
+     * @param insertHeaders denotes if chunk headers should be inserted into the
+     * report (true) or not (false)
      *
-     * @throws explanation.ExplanationException if any of the arguments are null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are null
      * or if the entered output stream type is not correct (concrete output 
      * stream type depends on the class that implements this interface)
      */
-    public void buildReportChunk (ExplanationChunk echunk, Object stream);
+    public void buildReportChunk (ExplanationChunk echunk, Object stream, boolean insertHeaders);
 
 }
 

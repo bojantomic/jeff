@@ -24,6 +24,7 @@ import org.goodoldai.jeff.explanation.ExplanationException;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -64,21 +65,17 @@ public class XMLReportBuilder extends ReportBuilder {
      * report
      * @param filepath a string representing an URL for the file
      *
-     * @throws explanation.ExplanationException if any of the arguments are null,
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are null,
      * if filepath is an empty string, or if IOException is caught
      */
     public void buildReport(Explanation explanation, String filepath) {
 
-        if (explanation == null && filepath == null) {
-            throw new ExplanationException("All of the arguments are mandatory, so they can not be null");
-        }
-
         if (explanation == null) {
-            throw new ExplanationException("The argument 'explanation' is mandatory, so it can not be null");
+            throw new ExplanationException("The entered explanation must not be null");
         }
 
         if (filepath == null || filepath.isEmpty()) {
-            throw new ExplanationException("The argument 'filepath' must not be null or empty string");
+            throw new ExplanationException("The entered filepath must not be null or empty string");
         }
 
         PrintWriter writer = null;
@@ -107,21 +104,17 @@ public class XMLReportBuilder extends ReportBuilder {
      * report
      * @param stream output stream to which the report is to be written
      *
-     * @throws explanation.ExplanationException if any of the arguments are null
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are null
      */
     @Override
     public void buildReport(Explanation explanation, Object stream) {
 
-        if (explanation == null && stream == null) {
-            throw new ExplanationException("All of the arguments are mandatory, so they can not be null");
-        }
-
         if (explanation == null) {
-            throw new ExplanationException("The argument 'explanation' is mandatory, so it can not be null");
+            throw new ExplanationException("The entered explanation must not be null");
         }
 
         if (stream == null) {
-            throw new ExplanationException("The argument 'stream' is mandatory, so it can not be null"); 
+            throw new ExplanationException("The entered stream must not be null");
         }
 
         if (!(stream instanceof PrintWriter)) {
@@ -140,7 +133,7 @@ public class XMLReportBuilder extends ReportBuilder {
             ExplanationChunk chunk = chunks.get(i);
             ReportChunkBuilder cbuilder = factory.getReportChunkBuilder(chunk);
 
-            cbuilder.buildReportChunk(chunk, document);
+            cbuilder.buildReportChunk(chunk, document, isInsertChunkHeaders());
         }
         
         XMLWriter writer = new XMLWriter(((PrintWriter)stream));
@@ -155,7 +148,7 @@ public class XMLReportBuilder extends ReportBuilder {
     /**
      * This method inserts the header into the XML report. The header consists 
      * of general data collected from the explanation (date and time created, 
-     * owner, language and local). If any of this data is missing, it is not 
+     * owner, title, language and country). If any of this data is missing, it is not
      * inserted into the report. Since the report format is XML, the provided 
      * output stream should be an instance of org.dom4j.Documents.
      * 
@@ -164,7 +157,7 @@ public class XMLReportBuilder extends ReportBuilder {
      * @param stream output stream that the header is supposed to be
      * inserted into
      * 
-     * @throws explanation.ExplanationException if any of the arguments are
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are
      * null or if the entered output stream type is not org.dom4j.Document
      */
     protected void insertHeader(Explanation explanation, Object stream) {
@@ -187,10 +180,11 @@ public class XMLReportBuilder extends ReportBuilder {
 
         Document document = (Document) stream;
 
-        String date = Long.toString(explanation.getCreated().getTimeInMillis());
+        String date = DateFormat.getInstance().format(explanation.getCreated().getTime());
         String owner = explanation.getOwner();
         String language = explanation.getLanguage();
         String country = explanation.getCountry();
+        String title = explanation.getTitle();
 
         Element root = document.getRootElement();
 
@@ -208,6 +202,10 @@ public class XMLReportBuilder extends ReportBuilder {
 
         if (country != null) {
             root.addAttribute("country", country);
+        }
+
+        if (title != null) {
+            root.addAttribute("title", title);
         }
     }
 }
