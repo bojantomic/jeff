@@ -1,0 +1,54 @@
+<!--
+  ~ Copyright 2014 Red Hat, Inc. and/or its affiliates.
+  ~
+  ~ Licensed under the Eclipse Public License version 1.0, available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<parent>
+		<groupId>org.kie</groupId>
+		<artifactId>kie-parent-with-dependencies</artifactId>
+		<version>6.3.0-SNAPSHOT</version>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.drools</groupId>
+	<artifactId>jeff</artifactId>
+
+	<dependencyManagement>
+		<dependencies>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+			<version>2.1.7</version>
+		</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.lowagie</groupId>
+			<artifactId>itext</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>
