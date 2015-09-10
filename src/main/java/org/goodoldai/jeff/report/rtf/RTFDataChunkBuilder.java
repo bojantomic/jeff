@@ -16,6 +16,7 @@ import org.goodoldai.jeff.explanation.data.ThreeDimData;
 import org.goodoldai.jeff.explanation.data.Triple;
 import org.goodoldai.jeff.explanation.data.Tuple;
 import org.goodoldai.jeff.explanation.data.TwoDimData;
+import org.goodoldai.jeff.report.ReportChunkBuilder;
 
 import com.lowagie.text.BadElementException;
 import com.lowagie.text.Document;
@@ -24,11 +25,42 @@ import com.lowagie.text.Paragraph;
 import com.lowagie.text.Table;
 import com.lowagie.text.rtf.table.RtfCell;
 
-public class RTFDataChunkBuilder {
+/**
+ * A concrete builder for transforming data explanation chunks into pieces
+ * of RTF report
+ *
+ * @author Anisja Kijevcanin
+ *
+ * @version 1.0 Data is presented in the form of tables, there are no formatting options
+ */
+public class RTFDataChunkBuilder implements ReportChunkBuilder {
 	
+	/**
+     * Initializes the builder
+     */
 	public RTFDataChunkBuilder() {
 	}
 	
+	/**
+     * This method transforms a data explanation chunk into a RTF report piece 
+     * and writes this piece into the provided output stream which is, in this 
+     * case, an instance of com.lowagie.text.Document. The method first collects all
+     * general chunk data (context, rule, group, tags) and inserts them into 
+     * the report, and then retrieves the chunk content. Since the content can 
+     * be a SingleData, OneDImData, TwoDimData or a ThreeDimData instance, 
+     * dimension details and concrete data are transformed into RTF and 
+     * inserted.
+     *
+     * @param echunk data explanation chunk that needs to be transformed
+     * @param stream output stream to which the transformed chunk will be
+     * written as output (in this case com.lowagie.text.Document)
+     * @param insertHeaders denotes if chunk headers should be inserted into the
+     * report (true) or not (false)
+     *
+     * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are
+     * null, if the entered chunk is not a DataExplanationChunk instance or if 
+     * the entered output stream type is not com.lowagie.text.Document
+     */
 	public void buildReportChunk(ExplanationChunk echunk, Object stream, boolean insertHeaders) {
         if (echunk == null) {
             throw new ExplanationException("The entered chunk must not be null");
@@ -65,7 +97,14 @@ public class RTFDataChunkBuilder {
 
         }
     }
-	
+	/**
+     * This is a private method that inserts single data content into
+     * the RTF document.
+     *
+     * @param data single data which needs to be transformed
+     * @param document RTF document in which the transformed data will be
+     * written
+     */
 	private void inputSingleDataContent(SingleData data, Document document) {
         String value = String.valueOf(data.getValue());
 
@@ -95,7 +134,13 @@ public class RTFDataChunkBuilder {
             throw new ExplanationException(ex.getMessage());
         }
     }
-	
+	/**
+	 * This is a private method which inserts one dimensional 
+	 * data content into an RTF document.
+	 * @param data one dimensional data which needs to be transformed
+	 * @param document RTFF document in which the transformed data will be
+     * written
+	 */
 	private void inputOneDimDataContent(OneDimData data, Document document) {
 		
         Table table = null;
@@ -127,6 +172,14 @@ public class RTFDataChunkBuilder {
 
     }
 	
+	/**
+     * This is a private method that is used to insert two dimensional data
+     * content into the RTF document.
+     *
+     * @param data two dimensional data which needs to be transformed
+     * @param document RTF document in which the transformed data will be
+     * written
+     */
 	private void inputTwoDimDataContent(TwoDimData data, Document document) {
 
         Table table = null;
@@ -164,7 +217,14 @@ public class RTFDataChunkBuilder {
         }
 
     }
-	
+	/**
+     * This is a private method that is used to insert three dimensional data
+     * content into the RTF document.
+     *
+     * @param data three dimensional data which needs to be transformed
+     * @param document RTF document in which the transformed data will be
+     * written
+     */
 	private void inputThreeDimDataContent(ThreeDimData data, Document document) {
 
         Table table;
@@ -209,6 +269,14 @@ public class RTFDataChunkBuilder {
 
     }
 	
+	/**
+     * This method transforms the dimension name and unit into a table header
+     *
+     * @param dimension Dimension that needs to be transformed in order to be
+     * used as a table header
+     *
+     * @return dimension transformed into a table header
+     */
 	 private String turnDimensionIntoHeader(Dimension dimension) {
 
 	        String dimensionName = dimension.getName();
@@ -221,6 +289,13 @@ public class RTFDataChunkBuilder {
 	        }
 	 	}
 	 
+	 /**
+	     * This method transforms a data value into a String which can be inserted
+	     * into a table cell
+	     * @param value data value that needs to be transformed
+	     * 
+	     * @return string representing table cell content
+	     */
 	 private String transformValue(Object value) {
 	        if (value instanceof Calendar) {
 	            Date date = ((Calendar) (value)).getTime();
