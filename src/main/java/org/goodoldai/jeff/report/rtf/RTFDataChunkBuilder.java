@@ -144,11 +144,12 @@ public class RTFDataChunkBuilder implements ReportChunkBuilder {
 	private void inputOneDimDataContent(OneDimData data, Document document) {
 		
         Table table = null;
+        
 		try {
 			table = new Table(1);
 			table.setWidth(30);
-			table.setAlignment(Table.ALIGN_LEFT);
-			table.setOffset(15.0F);
+	        table.setAlignment(Table.ALIGN_LEFT);
+	        table.setOffset(15.0F);
 
 			RtfCell cell1 =
 			        new RtfCell(new Paragraph(turnDimensionIntoHeader(data.getDimension())));
