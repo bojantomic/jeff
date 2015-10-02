@@ -66,7 +66,7 @@ public class PDFReportChunkBuilderFactoryTest extends AbstractJeffTest {
         //This is an instance of an unsupported chunk type
         UnknownExplanationChunk echunk = new UnknownExplanationChunk("");
 
-        PDFReportChunkBuilderFactory instance = new PDFReportChunkBuilderFactory();
+        RTFChunkBuilderFactory instance = new RTFChunkBuilderFactory();
 
         try {
             instance.getReportChunkBuilder(echunk);
@@ -86,7 +86,7 @@ public class PDFReportChunkBuilderFactoryTest extends AbstractJeffTest {
      */
     @Test
     public void testGetReportChunkBuilderNullChunk() {
-        PDFReportChunkBuilderFactory instance = new PDFReportChunkBuilderFactory();
+        RTFChunkBuilderFactory instance = new RTFChunkBuilderFactory();
 
         try {
             instance.getReportChunkBuilder(null);
@@ -106,10 +106,10 @@ public class PDFReportChunkBuilderFactoryTest extends AbstractJeffTest {
     @Test
     public void testGetExplanationChunkBuilderText1() {
         TextExplanationChunk tec = new TextExplanationChunk("sample text");
-        PDFReportChunkBuilderFactory instance = new PDFReportChunkBuilderFactory();
+        RTFChunkBuilderFactory instance = new RTFChunkBuilderFactory();
         ReportChunkBuilder result = instance.getReportChunkBuilder(tec);
 
-        assertTrue(result instanceof PDFTextChunkBuilder);
+        assertTrue(result instanceof RTFTextChunkBuilder);
     }
 
     /**
@@ -120,12 +120,12 @@ public class PDFReportChunkBuilderFactoryTest extends AbstractJeffTest {
     @Test
     public void testGetExplanationChunkBuilderText2() {
         TextExplanationChunk tec = new TextExplanationChunk("sample text");
-        PDFReportChunkBuilderFactory instance = new PDFReportChunkBuilderFactory();
+        RTFChunkBuilderFactory instance = new RTFChunkBuilderFactory();
         ReportChunkBuilder result1 = instance.getReportChunkBuilder(tec);
         ReportChunkBuilder result2 = instance.getReportChunkBuilder(tec);
 
-        assertTrue(result1 instanceof PDFTextChunkBuilder);
-        assertTrue(result2 instanceof PDFTextChunkBuilder);
+        assertTrue(result1 instanceof RTFTextChunkBuilder);
+        assertTrue(result2 instanceof RTFTextChunkBuilder);
 
         //Assert that the same builder instance is returned every time
         assertEquals(result1, result2);
@@ -139,10 +139,10 @@ public class PDFReportChunkBuilderFactoryTest extends AbstractJeffTest {
     public void testGetExplanationChunkBuilderImage1() {
         ImageExplanationChunk iec =
                 new ImageExplanationChunk(new ImageData("image.jpeg"));
-        PDFReportChunkBuilderFactory instance = new PDFReportChunkBuilderFactory();
+        RTFChunkBuilderFactory instance = new RTFChunkBuilderFactory();
         ReportChunkBuilder result = instance.getReportChunkBuilder(iec);
 
-        assertTrue(result instanceof PDFImageChunkBuilder);
+        assertTrue(result instanceof RTFImageChunkBuilder);
     }
 
     /**
@@ -154,13 +154,13 @@ public class PDFReportChunkBuilderFactoryTest extends AbstractJeffTest {
     public void testGetExplanationChunkBuilderImage2() {
         ImageExplanationChunk iec =
                 new ImageExplanationChunk(new ImageData("image.jpeg"));
-        PDFReportChunkBuilderFactory instance = new PDFReportChunkBuilderFactory();
+        RTFChunkBuilderFactory instance = new RTFChunkBuilderFactory();
 
         ReportChunkBuilder result1 = instance.getReportChunkBuilder(iec);
         ReportChunkBuilder result2 = instance.getReportChunkBuilder(iec);
 
-        assertTrue(result1 instanceof PDFImageChunkBuilder);
-        assertTrue(result2 instanceof PDFImageChunkBuilder);
+        assertTrue(result1 instanceof RTFImageChunkBuilder);
+        assertTrue(result2 instanceof RTFImageChunkBuilder);
 
         //Assert that the same builder instance is returned every time
         assertEquals(result1, result2);
@@ -175,10 +175,10 @@ public class PDFReportChunkBuilderFactoryTest extends AbstractJeffTest {
         DataExplanationChunk dec =
                 new DataExplanationChunk(
                 new SingleData(new Dimension("money"), new Double(123)));
-        PDFReportChunkBuilderFactory instance = new PDFReportChunkBuilderFactory();
+        RTFChunkBuilderFactory instance = new RTFChunkBuilderFactory();
         ReportChunkBuilder result = instance.getReportChunkBuilder(dec);
 
-        assertTrue(result instanceof PDFDataChunkBuilder);
+        assertTrue(result instanceof RTFDataChunkBuilder);
     }
 
     /**
@@ -191,12 +191,12 @@ public class PDFReportChunkBuilderFactoryTest extends AbstractJeffTest {
         DataExplanationChunk dec =
                 new DataExplanationChunk(
                 new SingleData(new Dimension("money"), new Double(123)));
-        PDFReportChunkBuilderFactory instance = new PDFReportChunkBuilderFactory();
+        RTFChunkBuilderFactory instance = new RTFChunkBuilderFactory();
         ReportChunkBuilder result1 = instance.getReportChunkBuilder(dec);
         ReportChunkBuilder result2 = instance.getReportChunkBuilder(dec);
 
-        assertTrue(result1 instanceof PDFDataChunkBuilder);
-        assertTrue(result2 instanceof PDFDataChunkBuilder);
+        assertTrue(result1 instanceof RTFDataChunkBuilder);
+        assertTrue(result2 instanceof RTFDataChunkBuilder);
 
         //Assert that the same builder instance is returned every time
         assertEquals(result1, result2);

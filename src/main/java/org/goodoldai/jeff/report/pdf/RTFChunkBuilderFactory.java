@@ -34,16 +34,16 @@ import org.goodoldai.jeff.report.ReportChunkBuilderFactory;
  *
  * @author Bojan Tomic
  */
-public class PDFReportChunkBuilderFactory implements ReportChunkBuilderFactory {
+public class RTFChunkBuilderFactory implements ReportChunkBuilderFactory {
 
-    private PDFImageChunkBuilder PDFImageChunkBuilder;
-    private PDFTextChunkBuilder PDFTextChunkBuilder;
-    private PDFDataChunkBuilder PDFDataChunkBuilder;
+    private RTFImageChunkBuilder PDFImageChunkBuilder;
+    private RTFTextChunkBuilder PDFTextChunkBuilder;
+    private RTFDataChunkBuilder PDFDataChunkBuilder;
 
     /**
      * Initializes all attributes (chunk builder references) to null.
      */
-    public PDFReportChunkBuilderFactory() {
+    public RTFChunkBuilderFactory() {
         PDFImageChunkBuilder = null;
         PDFTextChunkBuilder = null;
         PDFDataChunkBuilder = null;
@@ -81,7 +81,7 @@ public class PDFReportChunkBuilderFactory implements ReportChunkBuilderFactory {
 
         if (echunk instanceof TextExplanationChunk) {
             if (PDFTextChunkBuilder == null) {
-                PDFTextChunkBuilder = new PDFTextChunkBuilder();
+                PDFTextChunkBuilder = new RTFTextChunkBuilder();
             }
 
             return PDFTextChunkBuilder;
@@ -89,7 +89,7 @@ public class PDFReportChunkBuilderFactory implements ReportChunkBuilderFactory {
 
         if (echunk instanceof ImageExplanationChunk) {
             if (PDFImageChunkBuilder == null) {
-                PDFImageChunkBuilder = new PDFImageChunkBuilder();
+                PDFImageChunkBuilder = new RTFImageChunkBuilder();
             }
 
             return PDFImageChunkBuilder;
@@ -97,7 +97,7 @@ public class PDFReportChunkBuilderFactory implements ReportChunkBuilderFactory {
 
         if (echunk instanceof DataExplanationChunk) {
             if (PDFDataChunkBuilder == null) {
-                PDFDataChunkBuilder = new PDFDataChunkBuilder();
+                PDFDataChunkBuilder = new RTFDataChunkBuilder();
             }
 
             return PDFDataChunkBuilder;

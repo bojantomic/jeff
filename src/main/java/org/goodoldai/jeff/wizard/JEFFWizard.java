@@ -30,7 +30,7 @@ import org.goodoldai.jeff.explanation.builder.ExplanationChunkBuilderFactory;
 import org.goodoldai.jeff.explanation.builder.SimpleExplanationBuilder;
 import org.goodoldai.jeff.explanation.builder.SimpleExplanationChunkBuilderFactory;
 import org.goodoldai.jeff.report.pdf.PDFReportBuilder;
-import org.goodoldai.jeff.report.pdf.PDFReportChunkBuilderFactory;
+import org.goodoldai.jeff.report.pdf.RTFChunkBuilderFactory;
 import org.goodoldai.jeff.report.txt.TXTReportBuilder;
 import org.goodoldai.jeff.report.txt.TXTReportChunkBuilderFactory;
 import org.goodoldai.jeff.report.xml.XMLReportBuilder;
@@ -326,7 +326,7 @@ public class JEFFWizard {
             throw new ExplanationException("The the report can not be generated if explanation does not exist");
         }
 
-        PDFReportBuilder pdfBuilder = new PDFReportBuilder(new PDFReportChunkBuilderFactory());
+        PDFReportBuilder pdfBuilder = new PDFReportBuilder(new RTFChunkBuilderFactory());
 
         pdfBuilder.setInsertChunkHeaders(insertHeaders);
 
@@ -353,7 +353,7 @@ public class JEFFWizard {
             throw new ExplanationException("The the report can not be generated if explanation does not exist");
         }
 
-        PDFReportBuilder pdfBuilder = new PDFReportBuilder(new PDFReportChunkBuilderFactory());
+        PDFReportBuilder pdfBuilder = new PDFReportBuilder(new RTFChunkBuilderFactory());
 
         pdfBuilder.setInsertChunkHeaders(insertHeaders);
 

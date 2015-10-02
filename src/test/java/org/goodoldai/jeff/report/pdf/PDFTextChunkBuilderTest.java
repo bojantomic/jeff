@@ -49,7 +49,7 @@ public class PDFTextChunkBuilderTest extends AbstractJeffTest {
     TextExplanationChunk tchunk = null;
     Document doc = null;
     DummyDocListener docListener = null;
-    PDFTextChunkBuilder instance = null;
+    RTFTextChunkBuilder instance = null;
 
     @Before
     public void setUp() throws Exception {
@@ -76,7 +76,7 @@ public class PDFTextChunkBuilderTest extends AbstractJeffTest {
         doc.addDocListener(docListener);
 
         //Initialize the builder
-        instance = new PDFTextChunkBuilder();
+        instance = new RTFTextChunkBuilder();
     }
 
     @After

@@ -19,9 +19,13 @@
 package org.goodoldai.jeff.report.pdf;
 
 import com.lowagie.text.pdf.PdfReader;
+
+
 import java.io.File;
+
 import java.io.IOException;
 import java.util.Map;
+
 import org.goodoldai.jeff.explanation.Explanation;
 import org.goodoldai.jeff.explanation.ExplanationException;
 import org.goodoldai.jeff.explanation.ImageData;
@@ -54,7 +58,7 @@ public class PDFReportBuilderTest extends ReportBuilderTest {
 
     @Override
     public ReportChunkBuilderFactory getFactory() {
-        return new PDFReportChunkBuilderFactory();
+        return new RTFChunkBuilderFactory();
     }
 
     @Before
@@ -109,7 +113,6 @@ public class PDFReportBuilderTest extends ReportBuilderTest {
 
         //Assert that the appropriate file was created
         assertTrue((new File(filePath)).exists());
-
         //Assert that the metadata is correct
         PdfReader reader = new PdfReader(filePath);
         Map metadata = reader.getInfo();

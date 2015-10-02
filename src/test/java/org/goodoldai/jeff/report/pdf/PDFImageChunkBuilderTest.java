@@ -52,7 +52,7 @@ public class PDFImageChunkBuilderTest extends AbstractJeffTest {
     Document doc = null;
     DummyDocListener docListener = null;
 
-    PDFImageChunkBuilder instance = null;
+    RTFImageChunkBuilder instance = null;
 
     @Before
     public void setUp() throws Exception {
@@ -81,7 +81,7 @@ public class PDFImageChunkBuilderTest extends AbstractJeffTest {
         doc.addDocListener(docListener);
 
         //Initialize the builder
-        instance = new PDFImageChunkBuilder();
+        instance = new RTFImageChunkBuilder();
     }
 
     @After

@@ -33,12 +33,12 @@ import java.lang.reflect.Modifier;
  *
  * @author Bojan Tomic
  */
-class PDFChunkUtility {
+class RTFChunkUtility {
 
     /**
      * In order to prevent initialization, the constructor is private
      */
-    private PDFChunkUtility() {
+    private RTFChunkUtility() {
     }
 
     /**

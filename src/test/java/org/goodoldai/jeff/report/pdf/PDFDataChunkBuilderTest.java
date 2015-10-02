@@ -61,7 +61,7 @@ public class PDFDataChunkBuilderTest extends AbstractJeffTest {
     String[] tags = null;
     Document doc = null;
     DummyDocListener docListener = null;
-    PDFDataChunkBuilder instance = null;
+    RTFDataChunkBuilder instance = null;
 
     @Before
     public void setUp() throws Exception {
@@ -102,7 +102,7 @@ public class PDFDataChunkBuilderTest extends AbstractJeffTest {
         doc.addDocListener(docListener);
 
         //Initialize the builder
-        instance = new PDFDataChunkBuilder();
+        instance = new RTFDataChunkBuilder();
     }
 
     @After
