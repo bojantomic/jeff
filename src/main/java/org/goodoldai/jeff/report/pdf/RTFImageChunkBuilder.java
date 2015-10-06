@@ -35,12 +35,12 @@ import org.goodoldai.jeff.report.ReportChunkBuilder;
  * @version 1.0 No formatting options regarding image position or scaling
  * are available
  */
-public class PDFImageChunkBuilder implements ReportChunkBuilder {
+public class RTFImageChunkBuilder implements ReportChunkBuilder {
 
     /**
      * Initializes the builder
      */
-    public PDFImageChunkBuilder() {
+    public RTFImageChunkBuilder() {
     }
 
     /**
@@ -84,7 +84,7 @@ public class PDFImageChunkBuilder implements ReportChunkBuilder {
 
         //Insert general chunk data
         if (insertHeaders)
-            PDFChunkUtility.insertChunkHeader(echunk, doc);
+            RTFChunkUtility.insertChunkHeader(echunk, doc);
 
         try {
             //Insert content - in this case an image

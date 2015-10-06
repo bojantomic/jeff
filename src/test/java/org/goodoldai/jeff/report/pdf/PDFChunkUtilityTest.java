@@ -86,7 +86,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
     @Test
     public void testTranslateContextSuccessfull1() {
         String expResult = "ERROR";
-        String result = PDFChunkUtility.translateContext(ichunk);
+        String result = RTFChunkUtility.translateContext(ichunk);
         assertEquals(expResult, result);
     }
 
@@ -98,7 +98,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
     public void testTranslateContextSuccessfull2() {
         ichunk.setContext(ExplanationChunk.INFORMATIONAL);
         String expResult = "INFORMATIONAL";
-        String result = PDFChunkUtility.translateContext(ichunk);
+        String result = RTFChunkUtility.translateContext(ichunk);
         assertEquals(expResult, result);
     }
 
@@ -110,7 +110,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
     public void testTranslateContextSuccessfull3() {
         ichunk.setContext(ExplanationChunk.POSITIVE);
         String expResult = "POSITIVE";
-        String result = PDFChunkUtility.translateContext(ichunk);
+        String result = RTFChunkUtility.translateContext(ichunk);
         assertEquals(expResult, result);
     }
 
@@ -122,7 +122,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
     public void testTranslateContextSuccessfull4() {
         ichunk.setContext(ExplanationChunk.VERY_POSITIVE);
         String expResult = "VERY_POSITIVE";
-        String result = PDFChunkUtility.translateContext(ichunk);
+        String result = RTFChunkUtility.translateContext(ichunk);
         assertEquals(expResult, result);
     }
 
@@ -134,7 +134,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
     public void testTranslateContextSuccessfull5() {
         ichunk.setContext(ExplanationChunk.NEGATIVE);
         String expResult = "NEGATIVE";
-        String result = PDFChunkUtility.translateContext(ichunk);
+        String result = RTFChunkUtility.translateContext(ichunk);
         assertEquals(expResult, result);
     }
 
@@ -146,7 +146,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
     public void testTranslateContextSuccessfull6() {
         ichunk.setContext(ExplanationChunk.VERY_NEGATIVE);
         String expResult = "VERY_NEGATIVE";
-        String result = PDFChunkUtility.translateContext(ichunk);
+        String result = RTFChunkUtility.translateContext(ichunk);
         assertEquals(expResult, result);
     }
 
@@ -158,7 +158,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
     public void testTranslateContextSuccessfull7() {
         ichunk.setContext(ExplanationChunk.WARNING);
         String expResult = "WARNING";
-        String result = PDFChunkUtility.translateContext(ichunk);
+        String result = RTFChunkUtility.translateContext(ichunk);
         assertEquals(expResult, result);
     }
 
@@ -170,7 +170,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
     public void testTranslateContextUnsuccessfull() {
         ichunk.setContext(-2324);
         String expResult = null;
-        String result = PDFChunkUtility.translateContext(ichunk);
+        String result = RTFChunkUtility.translateContext(ichunk);
         assertEquals(expResult, result);
     }
 
@@ -182,7 +182,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
     public void testInsertChunkHeaderNullChunk() {
 
         try {
-            PDFChunkUtility.insertChunkHeader(null, doc);
+            RTFChunkUtility.insertChunkHeader(null, doc);
             fail("An exception should have been thrown but wasn't");
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
@@ -201,7 +201,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
     public void testInsertChunkHeaderNullDocument() {
 
         try {
-            PDFChunkUtility.insertChunkHeader(ichunk, null);
+            RTFChunkUtility.insertChunkHeader(ichunk, null);
         } catch (Exception e) {
             assertTrue(e instanceof ExplanationException);
             String expResult = "The entered document must not be null";
@@ -217,7 +217,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
      */
     @Test
     public void testInsertChunkHeaderSuccessfull1() {
-        PDFChunkUtility.insertChunkHeader(ichunk, doc);
+        RTFChunkUtility.insertChunkHeader(ichunk, doc);
 
         ArrayList<Object[]> events = docListener.getCapturedEvents();
 
@@ -249,7 +249,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
     public void testInsertChunkHeaderSuccessfull2() {
         ichunk.setContext(-355);
 
-        PDFChunkUtility.insertChunkHeader(ichunk, doc);
+        RTFChunkUtility.insertChunkHeader(ichunk, doc);
 
         ArrayList<Object[]> events = docListener.getCapturedEvents();
 
@@ -281,7 +281,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
     public void testInsertChunkHeaderSuccessfull3() {
         ichunk.setGroup(null);
 
-        PDFChunkUtility.insertChunkHeader(ichunk, doc);
+        RTFChunkUtility.insertChunkHeader(ichunk, doc);
 
         ArrayList<Object[]> events = docListener.getCapturedEvents();
 
@@ -309,7 +309,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
     public void testInsertChunkHeaderSuccessfull4() {
         ichunk.setRule(null);
 
-        PDFChunkUtility.insertChunkHeader(ichunk, doc);
+        RTFChunkUtility.insertChunkHeader(ichunk, doc);
 
         ArrayList<Object[]> events = docListener.getCapturedEvents();
 
@@ -338,7 +338,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
     public void testInsertChunkHeaderSuccessfull5() {
         ichunk.setTags(null);
 
-        PDFChunkUtility.insertChunkHeader(ichunk, doc);
+        RTFChunkUtility.insertChunkHeader(ichunk, doc);
 
         ArrayList<Object[]> events = docListener.getCapturedEvents();
 
@@ -368,7 +368,7 @@ public class PDFChunkUtilityTest extends AbstractJeffTest {
         ichunk.setRule(null);
         ichunk.setTags(null);
 
-        PDFChunkUtility.insertChunkHeader(ichunk, doc);
+        RTFChunkUtility.insertChunkHeader(ichunk, doc);
 
         ArrayList<Object[]> events = docListener.getCapturedEvents();
 

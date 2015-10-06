@@ -49,12 +49,12 @@ import org.goodoldai.jeff.report.ReportChunkBuilder;
  * @version 1.0 This version does not have any formatting options regarding
  * data presentation in PDF and data is presented in the form of tables
  */
-public class PDFDataChunkBuilder implements ReportChunkBuilder {
+public class RTFDataChunkBuilder implements ReportChunkBuilder {
 
     /**
      * Initializes the builder
      */
-    public PDFDataChunkBuilder() {
+    public RTFDataChunkBuilder() {
     }
 
     /**
@@ -98,7 +98,7 @@ public class PDFDataChunkBuilder implements ReportChunkBuilder {
 
         //Insert general chunk data
         if (insertHeaders)
-            PDFChunkUtility.insertChunkHeader(echunk, doc);
+            RTFChunkUtility.insertChunkHeader(echunk, doc);
 
         //Insert chunk content
         if (echunk.getContent() instanceof SingleData) {

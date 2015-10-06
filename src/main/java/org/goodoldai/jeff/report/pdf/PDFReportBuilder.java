@@ -28,8 +28,6 @@ import com.lowagie.text.pdf.PdfWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.goodoldai.jeff.explanation.Explanation;
 import org.goodoldai.jeff.explanation.ExplanationChunk;
 import org.goodoldai.jeff.explanation.ExplanationException;

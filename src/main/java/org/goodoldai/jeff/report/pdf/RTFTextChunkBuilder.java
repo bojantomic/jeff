@@ -32,12 +32,12 @@ import org.goodoldai.jeff.report.ReportChunkBuilder;
  * @version 0.1 This version has no formatting options regarding text (content)
  * but just inserts the text into the PDF document
  */
-public class PDFTextChunkBuilder implements ReportChunkBuilder {
+public class RTFTextChunkBuilder implements ReportChunkBuilder {
 
     /**
      * Initializes the builder
      */
-    public PDFTextChunkBuilder () {
+    public RTFTextChunkBuilder () {
     }
 
     /**
@@ -75,7 +75,7 @@ public class PDFTextChunkBuilder implements ReportChunkBuilder {
         
         //Insert general chunk data
         if (insertHeaders)
-            PDFChunkUtility.insertChunkHeader(echunk, doc);
+            RTFChunkUtility.insertChunkHeader(echunk, doc);
 
         try {
             //Insert content
