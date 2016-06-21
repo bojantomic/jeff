@@ -382,14 +382,14 @@ public class JEFFWizard {
     	if(explanation == null){
     		throw new ExplanationException("The the report can not be generated if explanation does not exist");
     	}
-    	
+
     	JSONReportBuilder jsonBuilder = new JSONReportBuilder(new JSONReportChunkBuilderFactory());
-    	
+
     	jsonBuilder.setInsertChunkHeaders(insertHeaders);
-    	
+
     	jsonBuilder.buildReport(explanation, filePath);
     }
-    
+
     /**
      * Creates an JSON report based on the provided explanation and sends it to
      * an output stream.
@@ -409,11 +409,11 @@ public class JEFFWizard {
     	if(explanation == null){
     		throw new ExplanationException("The the report can not be generated if explanation does not exist");
     	}
-    	
+
     	JSONReportBuilder jsonBuilder = new JSONReportBuilder(new JSONReportChunkBuilderFactory());
-    	
+
     	jsonBuilder.setInsertChunkHeaders(insertHeaders);
-    	
+
     	jsonBuilder.buildReport(explanation, stream);
     }
     

@@ -18,43 +18,43 @@ import com.google.gson.JsonObject;
 public class JSONChunkUtility {
 
 	/**
-     * In order to prevent initialization, the constructor is private.
-     */
+	 * In order to prevent initialization, the constructor is private.
+	 */
 	private JSONChunkUtility(){
 	}
-	
+
 	/**
 	 * This method inserts general explanation chunk data (context, rule,
-     * group, tags) into the report.
-     * 
+	 * group, tags) into the report.
+	 * 
 	 * @param echunk explanation chunk
 	 * @param jsonObj JsonObject in which chunk is being inserted
 	 * @return JsonObject with inserted explanation chunk
 	 */
 	public static JsonObject insertExplanationInfo(ExplanationChunk echunk, JsonObject jsonObj) {
-		
+
 		int cont = echunk.getContext();
 		String context = translateContext(cont, echunk);
 		String rule = echunk.getRule();
 		String group = echunk.getGroup();
 		String[] tags = echunk.getTags();
-		
+
 		jsonObj.addProperty("context", context);
-		
+
 		if(rule != null){
 			jsonObj.addProperty("rule", rule);
 		}
-		
+
 		if(group != null){
 			jsonObj.addProperty("group", group);
 		}
-		
+
 		if(tags != null){
 			JsonArray jsonArray = new JsonArray();
 			for (int i = 0; i < tags.length; i++) {
 				JsonObject obj = new JsonObject();
 				obj.addProperty("value", tags[i]);
-				
+
 				jsonArray.add(obj);
 			}
 			jsonObj.add("tags",jsonArray);
@@ -73,25 +73,24 @@ public class JSONChunkUtility {
 	 *
 	 * @throws org.goodoldai.jeff.explanation.ExplanationException 
 	 * In the case of any problems by covering raised IllegalArgumentException or
-     * IllegalAccessException.
+	 * IllegalAccessException.
 	 */
 	public static String translateContext(int context, ExplanationChunk echunk) {
-        Class cl = echunk.getClass();
-        Field fields[] = cl.getFields();
+		Class cl = echunk.getClass();
+		Field fields[] = cl.getFields();
 
-        for (int i = 0; i < fields.length; i++) {
-            try {
-                Field field = fields[i];
-                if (field.getInt(field.getName()) == context) {
-                    return field.getName().toLowerCase();
-                }
-            } catch (IllegalArgumentException ex) {
-                throw new ExplanationException(ex.getMessage());
-            } catch (IllegalAccessException ex) {
-                throw new ExplanationException(ex.getMessage());
-            }
-        }
-        return String.valueOf(context);
-    }
-
+		for (int i = 0; i < fields.length; i++) {
+			try {
+				Field field = fields[i];
+				if (field.getInt(field.getName()) == context) {
+					return field.getName().toLowerCase();
+				}
+			} catch (IllegalArgumentException ex) {
+				throw new ExplanationException(ex.getMessage());
+			} catch (IllegalAccessException ex) {
+				throw new ExplanationException(ex.getMessage());
+			}
+		}
+		return String.valueOf(context);
+	}
 }
