@@ -30,8 +30,6 @@ import org.goodoldai.jeff.explanation.builder.ExplanationBuilder;
 import org.goodoldai.jeff.explanation.builder.ExplanationChunkBuilderFactory;
 import org.goodoldai.jeff.explanation.builder.SimpleExplanationBuilder;
 import org.goodoldai.jeff.explanation.builder.SimpleExplanationChunkBuilderFactory;
-import org.goodoldai.jeff.report.json.JSONReportBuilder;
-import org.goodoldai.jeff.report.json.JSONReportChunkBuilderFactory;
 import org.goodoldai.jeff.report.pdf.PDFReportBuilder;
 import org.goodoldai.jeff.report.pdf.RTFChunkBuilderFactory;
 import org.goodoldai.jeff.report.txt.TXTReportBuilder;
@@ -363,59 +361,7 @@ public class JEFFWizard {
         pdfBuilder.buildReport(explanation, stream);
     }
 
-    /**
-     * Creates an JSON report based on the provided explanation and sends it to
-     * an JSON file as output.If the file doesn't exist,it is created. If it exists,
-     * it is overwritten.
-     *
-     * This method is used when the output report is supposed to be JSON.
-     *
-     * This method can not be called before the explanation has been created
-     *
-     * @param filePath the path and the name of the report
-     * @param insertHeaders denotes if chunk headers should be inserted into the
-     * report (true) or not (false)
-     *
-     * @throws ExplanationException if the explanation has not been created
-     */
-    public void generateJSONReport(String filePath, boolean insertHeaders) {
-    	if(explanation == null){
-    		throw new ExplanationException("The the report can not be generated if explanation does not exist");
-    	}
-
-    	JSONReportBuilder jsonBuilder = new JSONReportBuilder(new JSONReportChunkBuilderFactory());
-
-    	jsonBuilder.setInsertChunkHeaders(insertHeaders);
-
-    	jsonBuilder.buildReport(explanation, filePath);
-    }
-
-    /**
-     * Creates an JSON report based on the provided explanation and sends it to
-     * an output stream.
-     *
-     * This method is used when the output report is supposed to be JSON.
-     *
-     * This method can not be called before the explanation has been created
-     *
-     * @param stream a java.io.FileWriter instance to which the report will
-     * be sent
-     * @param insertHeaders denotes if chunk headers should be inserted into the
-     * report (true) or not (false)
-     *
-     * @throws ExplanationException if the explanation has not been created
-     */
-    public void generateJSONReport(FileWriter stream, boolean insertHeaders) {
-    	if(explanation == null){
-    		throw new ExplanationException("The the report can not be generated if explanation does not exist");
-    	}
-
-    	JSONReportBuilder jsonBuilder = new JSONReportBuilder(new JSONReportChunkBuilderFactory());
-
-    	jsonBuilder.setInsertChunkHeaders(insertHeaders);
-
-    	jsonBuilder.buildReport(explanation, stream);
-    }
+    
     
     /**
      * Implements the "addExplanationChunk" method for text chunks. It creates a
