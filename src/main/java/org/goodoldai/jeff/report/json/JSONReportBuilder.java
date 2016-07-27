@@ -7,8 +7,6 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.util.ArrayList;
 
-import org.dom4j.Document;
-import org.dom4j.Element;
 import org.goodoldai.jeff.explanation.Explanation;
 import org.goodoldai.jeff.explanation.ExplanationChunk;
 import org.goodoldai.jeff.explanation.ExplanationException;
@@ -22,7 +20,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 /**
  * A concrete ReportBuilder implementation. This class is used when the  
- * output report is supposed to be XML.
+ * output report is supposed to be JSON.
  *
  * @author Dusan Ignjatovic
  */
@@ -133,11 +131,11 @@ public class JSONReportBuilder extends ReportBuilder {
      * 
      * @param explanation explanation from which the header data is
      * to be collected
-     * @param stream output stream that the header is supposed to be
+     * @param stream JsonObject that the header is supposed to be
      * inserted into
      * 
      * @throws org.goodoldai.jeff.explanation.ExplanationException if any of the arguments are
-     * null or if the entered output stream type is not org.dom4j.Document
+     * null or if the entered output stream type is not com.google.gson.JsonObject
      */
 	@Override
 	protected void insertHeader(Explanation explanation, Object stream) {

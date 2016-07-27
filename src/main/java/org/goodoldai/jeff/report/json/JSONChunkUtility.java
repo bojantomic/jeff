@@ -2,7 +2,6 @@ package org.goodoldai.jeff.report.json;
 
 import java.lang.reflect.Field;
 
-import org.dom4j.Element;
 import org.goodoldai.jeff.explanation.ExplanationChunk;
 import org.goodoldai.jeff.explanation.ExplanationException;
 
@@ -28,7 +27,7 @@ public class JSONChunkUtility {
      * into the JSON document
      *
      * @param echunk explanation chunk that holds the information that needs to be inserted
-     * @param element in which the content of the transformed chunk will be
+     * @param jsonChunk in which the content of the transformed chunk will be
      * written in as an JSON object (in this case com.google.gson.JsonObject)
      */
     static void insertExplanationInfo(ExplanationChunk echunk, JsonObject jsonChunk) {

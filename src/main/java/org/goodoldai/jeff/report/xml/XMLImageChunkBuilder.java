@@ -102,7 +102,7 @@ public class XMLImageChunkBuilder implements ReportChunkBuilder {
      * @param imageExplanationChunk image explanation chunk which holds the content
      * that needs to be transformed
      * @param element element in which the content of the transformed chunk will be
-     * written in as an xml document (in this case org.dom4j.Document)
+     * written in as an JSON object (in this case org.dom4j.Document)
      */
     private void insertContent(ImageData imageData, Element element) {
 

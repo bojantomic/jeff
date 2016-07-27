@@ -1,7 +1,5 @@
 package org.goodoldai.jeff.report.json;
 
-import org.dom4j.Document;
-import org.dom4j.Element;
 import org.goodoldai.jeff.explanation.ExplanationChunk;
 import org.goodoldai.jeff.explanation.ExplanationException;
 import org.goodoldai.jeff.explanation.TextExplanationChunk;
@@ -58,7 +56,7 @@ public class JSONTextChunkBuilder implements ReportChunkBuilder{
 	        }
 
 	        if (!(stream instanceof JsonObject)) {
-	            throw new ExplanationException("The stream must be the type of org.dom4j.Document");
+	            throw new ExplanationException("The stream must be the type of com.google.gson.JsonObject");
 	        }
 	        
 	        JsonObject object = (JsonObject) stream;
@@ -79,11 +77,12 @@ public class JSONTextChunkBuilder implements ReportChunkBuilder{
      *
      * @param textExplenationChunk text explanation chunk which holds the content
      * that needs to be transformed
-     * @param element element in which the content of the transformed chunk will be
+     * @param object element in which the content of the transformed chunk will be
      * written in as an JSON object (in this case com.google.gson.JsonObject)
      */
 	private void insertContent(TextExplanationChunk textExplenationChunk, JsonObject object) {
 		String content = String.valueOf(textExplenationChunk.getContent());
+		object.addProperty("type", "text");
 		object.addProperty("content", content);
 	}
 	
