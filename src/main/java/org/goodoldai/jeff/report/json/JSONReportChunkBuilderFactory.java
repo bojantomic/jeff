@@ -55,7 +55,7 @@ public class JSONReportChunkBuilderFactory implements ReportChunkBuilderFactory{
      * JSONImageChunkBuilder instance is needed and not before. In all
      * subsequent calls when this method is supposed to return a
      * JSONImageChunkBuilder instance it returns the reference to the already
-     * initialized XMLImageChunkBuilder object.
+     * initialized JSONImageChunkBuilder object.
      *
      * @param echunk explanation chunk that needs to be transformed
      * into a report piece
