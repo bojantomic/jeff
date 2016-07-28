@@ -70,8 +70,8 @@ public class JSONImageChunkBuilder implements ReportChunkBuilder{
         JsonArray explanations = (JsonArray) object.get("explanation");
         
         JsonObject jsonChunk = new JsonObject();
-
-
+        object.addProperty("type", "image");
+        
         if (insertHeaders){
         	JSONChunkUtility.insertExplanationInfo(echunk, jsonChunk);
         }
@@ -94,7 +94,6 @@ public class JSONImageChunkBuilder implements ReportChunkBuilder{
         String url = imageData.getURL();
         String caption = imageData.getCaption();
 
-        object.addProperty("type", "image");
         object.addProperty("content", url);
 
         if (caption != null) {

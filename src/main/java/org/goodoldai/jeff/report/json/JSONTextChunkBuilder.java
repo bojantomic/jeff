@@ -61,7 +61,10 @@ public class JSONTextChunkBuilder implements ReportChunkBuilder{
 	        
 	        JsonObject object = (JsonObject) stream;
 	        JsonArray explanation = (JsonArray)object.get("explanation");
+	        
 	        JsonObject jsonChunk = new JsonObject();
+	        object.addProperty("type", "text");
+	        
 	        if (insertHeaders) {
 				JSONChunkUtility.insertExplanationInfo(echunk, jsonChunk);
 			}
@@ -82,7 +85,7 @@ public class JSONTextChunkBuilder implements ReportChunkBuilder{
      */
 	private void insertContent(TextExplanationChunk textExplenationChunk, JsonObject object) {
 		String content = String.valueOf(textExplenationChunk.getContent());
-		object.addProperty("type", "text");
+		
 		object.addProperty("content", content);
 	}
 	
