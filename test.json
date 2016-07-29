@@ -1,0 +1,33 @@
+{
+  "date": "7/29/16 7:27 PM",
+  "owner": "tester",
+  "language": "EN",
+  "country": "USA",
+  "title": "explanation title",
+  "explanation": [
+    {
+      "type": "text",
+      "context": "informational",
+      "content": "textTest"
+    },
+    {
+      "type": "image",
+      "context": "informational",
+      "content": "imgTest.jpg"
+    },
+    {
+      "type": "data",
+      "context": "error",
+      "rule": "testRule",
+      "group": "testGroup",
+      "tags": [
+        "tag1",
+        "tag2"
+      ],
+      "subtype": "singleData",
+      "content": "value",
+      "dimensionName": "testName",
+      "dimensionUnit": "testUnit"
+    }
+  ]
+}

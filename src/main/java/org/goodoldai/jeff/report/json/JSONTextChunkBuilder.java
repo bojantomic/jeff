@@ -63,7 +63,7 @@ public class JSONTextChunkBuilder implements ReportChunkBuilder{
 	        JsonArray explanation = (JsonArray)object.get("explanation");
 	        
 	        JsonObject jsonChunk = new JsonObject();
-	        object.addProperty("type", "text");
+	        jsonChunk.addProperty("type", "text");
 	        
 	        if (insertHeaders) {
 				JSONChunkUtility.insertExplanationInfo(echunk, jsonChunk);

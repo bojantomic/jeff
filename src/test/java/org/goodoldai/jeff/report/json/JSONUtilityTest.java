@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 /**
@@ -46,30 +47,6 @@ public class JSONUtilityTest extends AbstractJeffTest {
 		object = null;
 	}
 
-	/**
-	 * Test of insertExplanationInfo method, of class JSONChunkUtility. Test
-	 * case: successful insertion of data using the ExplanationChunk constructor
-	 * that only has content.
-	 */
-	@Test
-	public void testInsertExplenationInfoFirstConstructor() {
-
-		JSONChunkUtility.insertExplanationInfo(textEchunk2, object);
-		String context = object.get("context").getAsString();
-		String group = object.get("group").getAsString();
-		String rule = object.get("rule").getAsString();
-
-		JsonArray jsonTags = (JsonArray) object.get("tags");
-		String[] tags = new String[jsonTags.size()];
-		for (int i = 0; i < jsonTags.size(); i++) {
-			tags[i] = jsonTags.get(i).getAsString();
-		}
-		assertEquals("error", context);
-		assertEquals("testGroup", group);
-		assertEquals("testRule", rule);
-		assertEquals("tag1", tags[0]);
-		assertEquals("tag2", tags[1]);
-	}
     
     /**
      * Test of insertExplanationInfo method, of class JSONChunkUtility.
@@ -77,20 +54,37 @@ public class JSONUtilityTest extends AbstractJeffTest {
      * that has all elements.
      */
     @Test
-	public void testInsertExplenationInfoSecondConstructor() {
+	public void testInsertExplenationInfoConstructor() {
 
 		String[] names = { "rule", "group", "context" };
 		String[] values = { "testRule", "testGroup", "error" };
 
 		JSONChunkUtility.insertExplanationInfo(textEchunk2, object);
 
-		// checks the number of elements in the element "tags"
-		assertEquals(2, object.get("tags").getAsJsonArray().size());
-
 		// checks the values and names of properties
 		for (int i = 0; i < names.length; i++) {
 			assertEquals(values[i], object.get(names[i]).getAsString());
-		}	
+		}
+
+		String context = object.get("context").getAsString();
+		String group = object.get("group").getAsString();
+		String rule = object.get("rule").getAsString();
+
+		JsonArray jsonTags = (JsonArray) object.get("tags");
+		
+		// checks the number of elements in the element "tags"
+		assertEquals(2, jsonTags.size());
+		//create array of strings
+		String[] tags = new String[jsonTags.size()];
+		for (int i = 0; i < jsonTags.size(); i++) {
+			tags[i] = jsonTags.get(i).getAsString();
+		}
+
+		assertEquals("error", context);
+		assertEquals("testGroup", group);
+		assertEquals("testRule", rule);
+		assertEquals("tag1", tags[0]);
+		assertEquals("tag2", tags[1]);		
 	}
     
     /**

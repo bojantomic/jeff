@@ -104,6 +104,7 @@ public class JSONReportBuilder extends ReportBuilder {
         JsonObject object = new JsonObject();
         insertHeader(explanation, object);
         object.add("explanation", new JsonArray());        
+        //System.out.println((JsonArray) ( (JsonObject) stream ).get("explanation") );
         
         ArrayList<ExplanationChunk> chunks = explanation.getChunks();        
         for (int i = 0; i < chunks.size(); i++) {
@@ -113,14 +114,14 @@ public class JSONReportBuilder extends ReportBuilder {
 
             cbuilder.buildReportChunk(chunk, object, isInsertChunkHeaders());
         }
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        FileWriter writer = (FileWriter) stream;
-        try {
-			writer.write(gson.toJson(object));
-			writer.close();
-		} catch (IOException e) {
-			throw new ExplanationException("The file could not be writen due to fallowing IO error: " + e.getMessage());
-		} 
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		PrintWriter writer = (PrintWriter) stream;
+
+		writer.write(gson.toJson(object));
+		writer.close();
+		if (writer.checkError()) {
+			throw new ExplanationException("The file could not be writen due to fallowing IO error: ");
+		}
 	}
 	/**
      * This method inserts the header into the JSON report. The header consists 

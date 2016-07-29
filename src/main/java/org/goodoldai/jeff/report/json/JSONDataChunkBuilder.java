@@ -15,6 +15,8 @@ import org.goodoldai.jeff.explanation.data.Tuple;
 import org.goodoldai.jeff.explanation.data.TwoDimData;
 import org.goodoldai.jeff.report.ReportChunkBuilder;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 /**
@@ -75,7 +77,9 @@ public class JSONDataChunkBuilder implements ReportChunkBuilder{
         }
         
         JsonObject object = (JsonObject) stream;
+        
         JsonArray explanation = (JsonArray)object.get("explanation");
+       
         
         JsonObject jsonChunk = new JsonObject();
         jsonChunk.addProperty("type", "data");
@@ -86,6 +90,7 @@ public class JSONDataChunkBuilder implements ReportChunkBuilder{
         DataExplanationChunk dataExplenationChunk = (DataExplanationChunk) echunk;
 
         insertContent(dataExplenationChunk, jsonChunk);
+
         explanation.add(jsonChunk);
 	}	
 	/**
@@ -204,11 +209,12 @@ public class JSONDataChunkBuilder implements ReportChunkBuilder{
 		String dimensionName2 = dimension2.getName();
 		String dimensionUnit2 = dimension2.getUnit();
 		
+		//add dimension1 property to explanation report chunk
 		jsonChunk.addProperty("dimensionName1", dimensionName1);
 		if (dimensionUnit1 != null) {
 			jsonChunk.addProperty("dimensionUnit1", dimensionUnit1);
 		}
-		
+		//add dimension2 property to explanation report chunk
 		jsonChunk.addProperty("dimensionName2", dimensionName2);
 		if (dimensionUnit2 != null) {
 			jsonChunk.addProperty("dimensionUnit2", dimensionUnit2);
@@ -217,16 +223,18 @@ public class JSONDataChunkBuilder implements ReportChunkBuilder{
 		JsonArray jsonTuples = new JsonArray();
 		for (Iterator<Tuple> it = tupleValues.iterator(); it.hasNext();){
 			Tuple tuple = it.next();
-			
+			//geting tuple values
 			String value1 = String.valueOf(tuple.getValue1());
 			String value2 = String.valueOf(tuple.getValue2());
-			
+			//create tuple
 			JsonObject jsonTuple = new JsonObject();
 			jsonTuple.addProperty("value1", value1);
 			jsonTuple.addProperty("value2", value2);
+			//add tuple to array
 			jsonTuples.add(jsonTuple);
 		}
-		
+		//add content to explanation report chunk
+		jsonChunk.add("content", jsonTuples);
 	}
 	/**
      * This is a private method that is used to insert content into the document.
@@ -250,7 +258,7 @@ public class JSONDataChunkBuilder implements ReportChunkBuilder{
 		String dimensionName2 = dimension2.getName();
 		String dimensionUnit2 = dimension2.getUnit();
 		
-		Dimension dimension3 = threeDimData.getDimension2();
+		Dimension dimension3 = threeDimData.getDimension3();
 		String dimensionName3 = dimension3.getName();
 		String dimensionUnit3 = dimension3.getUnit();
 		
@@ -270,7 +278,7 @@ public class JSONDataChunkBuilder implements ReportChunkBuilder{
 			jsonChunk.addProperty("dimensionUnit3", dimensionUnit3);
 		}
 		
-		JsonArray jsonTuples = new JsonArray();
+		JsonArray jsonTriples = new JsonArray();
 		for (Iterator<Triple> it = tripleValues.iterator(); it.hasNext();){
 			Triple triple = it.next();
 			
@@ -283,8 +291,9 @@ public class JSONDataChunkBuilder implements ReportChunkBuilder{
 			jsonTriple.addProperty("value2", value2);
 			jsonTriple.addProperty("value3", value3);
 
-			jsonTuples.add(jsonTriple);
+			jsonTriples.add(jsonTriple);
 		}
+		jsonChunk.add("content", jsonTriples);
 	}
 
 	
