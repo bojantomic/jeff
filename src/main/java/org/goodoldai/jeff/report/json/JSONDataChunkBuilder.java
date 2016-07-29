@@ -14,9 +14,6 @@ import org.goodoldai.jeff.explanation.data.Triple;
 import org.goodoldai.jeff.explanation.data.Tuple;
 import org.goodoldai.jeff.explanation.data.TwoDimData;
 import org.goodoldai.jeff.report.ReportChunkBuilder;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 /**

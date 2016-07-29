@@ -3,10 +3,6 @@ package org.goodoldai.jeff.report.json;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.dom4j.Attribute;
-import org.dom4j.Element;
 import org.goodoldai.jeff.AbstractJeffTest;
 import org.goodoldai.jeff.explanation.DataExplanationChunk;
 import org.goodoldai.jeff.explanation.TextExplanationChunk;
