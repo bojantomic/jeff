@@ -5,7 +5,6 @@ import org.goodoldai.jeff.explanation.ExplanationException;
 import org.goodoldai.jeff.explanation.ImageData;
 import org.goodoldai.jeff.explanation.ImageExplanationChunk;
 import org.goodoldai.jeff.report.ReportChunkBuilder;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 

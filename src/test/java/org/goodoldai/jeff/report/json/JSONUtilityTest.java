@@ -46,13 +46,12 @@ public class JSONUtilityTest extends AbstractJeffTest {
 		object = null;
 	}
 
-    
-    /**
-     * Test of insertExplanationInfo method, of class JSONChunkUtility.
-     * Test case: successful insertion of data using the ExplanationChunk constructor
-     * that has all elements.
-     */
-    @Test
+	/**
+	 * Test of insertExplanationInfo method, of class JSONChunkUtility. Test
+	 * case: successful insertion of data using the ExplanationChunk constructor
+	 * that has all elements.
+	 */
+	@Test
 	public void testInsertExplenationInfoConstructor() {
 
 		String[] names = { "rule", "group", "context" };
@@ -70,10 +69,10 @@ public class JSONUtilityTest extends AbstractJeffTest {
 		String rule = object.get("rule").getAsString();
 
 		JsonArray jsonTags = (JsonArray) object.get("tags");
-		
+
 		// checks the number of elements in the element "tags"
 		assertEquals(2, jsonTags.size());
-		//create array of strings
+		// create array of strings
 		String[] tags = new String[jsonTags.size()];
 		for (int i = 0; i < jsonTags.size(); i++) {
 			tags[i] = jsonTags.get(i).getAsString();
@@ -83,115 +82,114 @@ public class JSONUtilityTest extends AbstractJeffTest {
 		assertEquals("testGroup", group);
 		assertEquals("testRule", rule);
 		assertEquals("tag1", tags[0]);
-		assertEquals("tag2", tags[1]);		
+		assertEquals("tag2", tags[1]);
 	}
-    
-    /**
-     * Test of translateContext method, of class JSONChunkUtility.
-     * Test case: successful transformation of context from the TextExplanationChunk
-     * when the context is not predefined
-     */
-    @Test
+
+	/**
+	 * Test of translateContext method, of class JSONChunkUtility. Test case:
+	 * successful transformation of context from the TextExplanationChunk when
+	 * the context is not predefined
+	 */
+	@Test
 	public void testTranslateContextTypeNotRecognized() {
 		int context = -555;
 		String result = JSONChunkUtility.translateContext(context, textEchunk1);
 		assertEquals(String.valueOf(context), result);
 	}
-    
-    /**
-     * Test of translateContext method, of class JSONChunkUtility.
-     * Test case: successful transformation of context from the TextExplanationChunk
-     * when the context is predefined ant it is "INFORMATIONAL"
-     */
-    @Test
-    public void testTranslateContextKnownTypeInformational() {
-        int context = 0;
-        String expResult = "INFORMATIONAL".toLowerCase();
-        String result = JSONChunkUtility.translateContext(context, textEchunk1);
-        assertEquals(expResult, result);
-    }
 
-    /**
-     * Test of translateContext method, of class JSONChunkUtility.
-     * Test case: successful transformation of context from the TextExplanationChunk
-     * when the context is predefined ant it is "WARNING"
-     */
-    @Test
-    public void testTranslateContextKnownTypeInformationalWarning() {
-        int context = -5;
-        String expResult = "WARNING".toLowerCase();
-        String result = JSONChunkUtility.translateContext(context, textEchunk1);
-        assertEquals(expResult, result);
-    }
+	/**
+	 * Test of translateContext method, of class JSONChunkUtility. Test case:
+	 * successful transformation of context from the TextExplanationChunk when
+	 * the context is predefined ant it is "INFORMATIONAL"
+	 */
+	@Test
+	public void testTranslateContextKnownTypeInformational() {
+		int context = 0;
+		String expResult = "INFORMATIONAL".toLowerCase();
+		String result = JSONChunkUtility.translateContext(context, textEchunk1);
+		assertEquals(expResult, result);
+	}
 
-    /**
-     * Test of translateContext method, of class JSONChunkUtility.
-     * Test case: successful transformation of context from the TextExplanationChunk
-     * when the context is predefined ant it is "ERROR"
-     */
-    @Test
-    public void testTranslateContextKnownTypeError() {
-        int context = -10;
-        String expResult = "ERROR".toLowerCase();
-        String result = JSONChunkUtility.translateContext(context, textEchunk1);
-        assertEquals(expResult, result);
-//        String result = XMLChunkUtility.translateContext(context, textEchunk1);
-        
-//        assertEquals(expResult, result);
-    }
+	/**
+	 * Test of translateContext method, of class JSONChunkUtility. Test case:
+	 * successful transformation of context from the TextExplanationChunk when
+	 * the context is predefined ant it is "WARNING"
+	 */
+	@Test
+	public void testTranslateContextKnownTypeInformationalWarning() {
+		int context = -5;
+		String expResult = "WARNING".toLowerCase();
+		String result = JSONChunkUtility.translateContext(context, textEchunk1);
+		assertEquals(expResult, result);
+	}
 
-    /**
-     * Test of translateContext method, of class JSONChunkUtility.
-     * Test case: successful transformation of context from the TextExplanationChunk
-     * when the context is predefined ant it is "POSITIVE"
-     */
-    @Test
-    public void testTranslateContextKnownTypePositive() {
-        int context = 1;
-        String expResult = "POSITIVE".toLowerCase();
-        String result = JSONChunkUtility.translateContext(context, textEchunk1);
-        assertEquals(expResult, result);
-    }
+	/**
+	 * Test of translateContext method, of class JSONChunkUtility. Test case:
+	 * successful transformation of context from the TextExplanationChunk when
+	 * the context is predefined ant it is "ERROR"
+	 */
+	@Test
+	public void testTranslateContextKnownTypeError() {
+		int context = -10;
+		String expResult = "ERROR".toLowerCase();
+		String result = JSONChunkUtility.translateContext(context, textEchunk1);
+		assertEquals(expResult, result);
+		// String result = XMLChunkUtility.translateContext(context,
+		// textEchunk1);
 
-    /**
-     * Test of translateContext method, of class JSONChunkUtility.
-     * Test case: successful transformation of context from the TextExplanationChunk
-     * when the context is predefined ant it is "VERY_POSITIVE"
-     */
-    @Test
-    public void testTranslateContextKnownTypeVeryPositive() {
-        int context = 2;
-        String expResult = "VERY_POSITIVE".toLowerCase();
-        String result = JSONChunkUtility.translateContext(context, textEchunk1);
-        assertEquals(expResult, result);
-    }
+		// assertEquals(expResult, result);
+	}
 
-    /**
-     * Test of translateContext method, of class JSONChunkUtility.
-     * Test case: successful transformation of context from the TextExplanationChunk
-     * when the context is predefined ant it is "NEGATIVE"
-     */
-    @Test
-    public void testTranslateContextKnownTypeNegative() {
-        int context = -1;
-        String expResult = "NEGATIVE".toLowerCase();
-        String result = JSONChunkUtility.translateContext(context, textEchunk1);
-        assertEquals(expResult, result);
-    }
+	/**
+	 * Test of translateContext method, of class JSONChunkUtility. Test case:
+	 * successful transformation of context from the TextExplanationChunk when
+	 * the context is predefined ant it is "POSITIVE"
+	 */
+	@Test
+	public void testTranslateContextKnownTypePositive() {
+		int context = 1;
+		String expResult = "POSITIVE".toLowerCase();
+		String result = JSONChunkUtility.translateContext(context, textEchunk1);
+		assertEquals(expResult, result);
+	}
 
-    /**
-     * Test of translateContext method, of class JSONChunkUtility.
-     * Test case: successful transformation of context from the TextExplanationChunk
-     * when the context is predefined ant it is "VERY_NEGATIVE"
-     */
-    @Test
-    public void testTranslateContextKnownTypeVeryNegative() {
-       int context = -2;
-       String expResult = "VERY_NEGATIVE".toLowerCase();
-       String result = JSONChunkUtility.translateContext(context, textEchunk1);
-       assertEquals(expResult, result);
-    }
-    
-	
+	/**
+	 * Test of translateContext method, of class JSONChunkUtility. Test case:
+	 * successful transformation of context from the TextExplanationChunk when
+	 * the context is predefined ant it is "VERY_POSITIVE"
+	 */
+	@Test
+	public void testTranslateContextKnownTypeVeryPositive() {
+		int context = 2;
+		String expResult = "VERY_POSITIVE".toLowerCase();
+		String result = JSONChunkUtility.translateContext(context, textEchunk1);
+		assertEquals(expResult, result);
+	}
+
+	/**
+	 * Test of translateContext method, of class JSONChunkUtility. Test case:
+	 * successful transformation of context from the TextExplanationChunk when
+	 * the context is predefined ant it is "NEGATIVE"
+	 */
+	@Test
+	public void testTranslateContextKnownTypeNegative() {
+		int context = -1;
+		String expResult = "NEGATIVE".toLowerCase();
+		String result = JSONChunkUtility.translateContext(context, textEchunk1);
+		assertEquals(expResult, result);
+	}
+
+	/**
+	 * Test of translateContext method, of class JSONChunkUtility. Test case:
+	 * successful transformation of context from the TextExplanationChunk when
+	 * the context is predefined ant it is "VERY_NEGATIVE"
+	 */
+	@Test
+	public void testTranslateContextKnownTypeVeryNegative() {
+		int context = -2;
+		String expResult = "VERY_NEGATIVE".toLowerCase();
+		String result = JSONChunkUtility.translateContext(context, textEchunk1);
+		assertEquals(expResult, result);
+	}
 
 }
