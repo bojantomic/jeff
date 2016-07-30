@@ -134,10 +134,6 @@ public class JSONUtilityTest extends AbstractJeffTest {
 		String expResult = "ERROR".toLowerCase();
 		String result = JSONChunkUtility.translateContext(context, textEchunk1);
 		assertEquals(expResult, result);
-		// String result = XMLChunkUtility.translateContext(context,
-		// textEchunk1);
-
-		// assertEquals(expResult, result);
 	}
 
 	/**

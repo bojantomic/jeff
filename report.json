@@ -1,5 +1,5 @@
 {
-  "date": "7/30/16 11:15 PM",
+  "date": "7/31/16 12:34 AM",
   "owner": "tester",
   "language": "srb",
   "country": "RS",
@@ -17,9 +17,9 @@
     {
       "type": "data",
       "subtype": "singleData",
-      "content": "valueTest",
       "dimensionName": "money",
-      "dimensionUnit": "EUR"
+      "dimensionUnit": "EUR",
+      "content": "valueTest"
     }
   ]
 }

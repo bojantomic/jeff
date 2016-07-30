@@ -1,5 +1,5 @@
 {
-  "date": "7/30/16 5:25 AM",
+  "date": "7/31/16 12:34 AM",
   "owner": "tester",
   "language": "EN",
   "country": "USA",
@@ -25,9 +25,9 @@
         "tag2"
       ],
       "subtype": "singleData",
-      "content": "value",
       "dimensionName": "testName",
-      "dimensionUnit": "testUnit"
+      "dimensionUnit": "testUnit",
+      "content": "value"
     }
   ]
 }
