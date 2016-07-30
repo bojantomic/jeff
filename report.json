@@ -1,0 +1,25 @@
+{
+  "date": "7/30/16 11:15 PM",
+  "owner": "tester",
+  "language": "srb",
+  "country": "RS",
+  "title": "Explanation title",
+  "explanation": [
+    {
+      "type": "text",
+      "content": "test textContent"
+    },
+    {
+      "type": "image",
+      "content": "/WHALE.JPG",
+      "caption": "Image 1"
+    },
+    {
+      "type": "data",
+      "subtype": "singleData",
+      "content": "valueTest",
+      "dimensionName": "money",
+      "dimensionUnit": "EUR"
+    }
+  ]
+}

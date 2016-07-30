@@ -46,6 +46,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -5450,5 +5452,287 @@ public class JEFFWizardTest extends AbstractJeffTest {
         assertTrue(new File(filePathPDF).length() > 0);
     }
     
-    
+    /**
+     * Test of generateJSONReport method, of class JEFFWizard.
+     * Test case: unsuccessful creation of the report
+     * because the building process has never started
+     */
+    @Test(expected = org.goodoldai.jeff.explanation.ExplanationException.class)
+    public void testFailGenerateJSONReport() {
+    	simpleWizard.generateJSONReport(filePathJSON, true);
+    	fail("Exception should have been thrown, but it wasn't");
+    }
+
+    /**
+     * Test of generateJSONReport method, of class JEFFWizard.
+     * Test case: successful creation of the report
+     */
+    @Test
+    public void testGenerateJSONReport_FilePath() throws FileNotFoundException, IOException {
+
+        //creates the object using the constructor with all values
+        simpleWizard = new JEFFWizard(owner, language, country, title, false);
+
+        //starting the building process
+        simpleWizard.createExplanation();
+
+        //adding explanation chunk
+        simpleWizard.addTextError(textContent);
+		simpleWizard.addImage(rule, imageContent);
+		simpleWizard.addDataPositive(group, rule, tags, dataContent);
+
+		// generates the report
+		simpleWizard.generateJSONReport(filePathJSON, true);
+
+		// checks if the file is created
+		assertTrue(new File(filePathJSON).exists());
+		// extract JsonObject from JSON file
+		Gson gson = new GsonBuilder().create();
+		FileReader reader = new FileReader(filePathJSON);
+		JsonObject jsObject = gson.fromJson(reader, JsonObject.class);
+
+		//checking for the explanation header elements
+		assertEquals(owner, jsObject.get("owner").getAsString());
+		assertEquals(language, jsObject.get("language").getAsString());
+		assertEquals(country, jsObject.get("country").getAsString());
+		assertEquals(DateFormat.getInstance().format(simpleWizard.getExplanation().getCreated().getTime()), jsObject.get("date").getAsString());
+		assertEquals(owner, jsObject.get("owner").getAsString());
+		
+		//getting explanation array from JSON report
+		JsonArray explanation = jsObject.get("explanation").getAsJsonArray();
+		//checks the first explanation chunk		
+		JsonObject textChunk = (JsonObject) explanation.get(0);//getting first(textual) explanation
+		assertEquals("text", textChunk.get("type").getAsString());
+		assertEquals("error", textChunk.get("context").getAsString());
+		assertEquals(textContent, textChunk.get("content").getAsString());
+		
+		//checks the second explanation chunk
+		JsonObject imageChunk = (JsonObject) explanation.get(1);//getting second(image) explanation
+		assertEquals("image", imageChunk.get("type").getAsString());
+		assertEquals("informational", imageChunk.get("context").getAsString());
+		assertEquals(rule, imageChunk.get("rule").getAsString());
+		assertEquals(url, imageChunk.get("content").getAsString());
+		assertEquals(caption, imageChunk.get("caption").getAsString());
+
+		// checks the third explanation chunk
+		JsonObject dataChunk = (JsonObject) explanation.get(2);// getting second(image) explanation
+		assertEquals("data", dataChunk.get("type").getAsString());
+		assertEquals("singleData", dataChunk.get("subtype").getAsString());
+		assertEquals("positive", dataChunk.get("context").getAsString());
+		assertEquals(rule, dataChunk.get("rule").getAsString());
+		assertEquals(group, dataChunk.get("group").getAsString());
+		assertEquals(dataValue, dataChunk.get("content").getAsString());
+		assertEquals(name, dataChunk.get("dimensionName").getAsString());
+		assertEquals(unit, dataChunk.get("dimensionUnit").getAsString());
+		// checks the number of tags
+		JsonArray jsonTags = (JsonArray) dataChunk.get("tags");
+		assertEquals(2, jsonTags.size());
+
+		String[] tags = new String[jsonTags.size()];
+		for (int i = 0; i < jsonTags.size(); i++) {
+			tags[i] = jsonTags.get(i).getAsString();
+		}
+		// checks for tag names
+		assertEquals("tag1", tags[0]);
+		assertEquals("tag1", tags[0]);
+    }
+
+    /**
+     * Test of generateJSONReport method, of class JEFFWizard.
+     * Test case: successful creation of the report but with no chunk headers
+     */
+    @Test
+    public void testGenerateJSONReport_FilePathNoChunkHeaders() throws FileNotFoundException, IOException {
+
+    	//creates the object using the constructor with all values
+        simpleWizard = new JEFFWizard(owner, language, country, title, false);
+
+        //starting the building process
+        simpleWizard.createExplanation();
+
+        //adding explanation chunk
+        simpleWizard.addTextError(textContent);
+		simpleWizard.addImage(rule, imageContent);
+		simpleWizard.addDataPositive(group, rule, tags, dataContent);
+
+		// generates the report
+		simpleWizard.generateJSONReport(filePathJSON, false);
+
+		// checks if the file is created
+		assertTrue(new File(filePathJSON).exists());
+		// extract JsonObject from JSON file
+		Gson gson = new GsonBuilder().create();
+		FileReader reader = new FileReader(filePathJSON);
+		JsonObject jsObject = gson.fromJson(reader, JsonObject.class);
+
+		//checking for the explanation header elements
+		assertEquals(owner, jsObject.get("owner").getAsString());
+		assertEquals(language, jsObject.get("language").getAsString());
+		assertEquals(country, jsObject.get("country").getAsString());
+		assertEquals(DateFormat.getInstance().format(simpleWizard.getExplanation().getCreated().getTime()), jsObject.get("date").getAsString());
+		assertEquals(owner, jsObject.get("owner").getAsString());
+		
+		//getting explanation array from JSON report
+		JsonArray explanation = jsObject.get("explanation").getAsJsonArray();
+		//checks the first explanation chunk		
+		JsonObject textChunk = (JsonObject) explanation.get(0);//getting first(textual) explanation
+		assertEquals("text", textChunk.get("type").getAsString());
+		assertEquals(textContent, textChunk.get("content").getAsString());
+		
+		//checks the second explanation chunk
+		JsonObject imageChunk = (JsonObject) explanation.get(1);//getting second(image) explanation
+		assertEquals("image", imageChunk.get("type").getAsString());
+		assertEquals(url, imageChunk.get("content").getAsString());
+		assertEquals(caption, imageChunk.get("caption").getAsString());
+
+		// checks the third explanation chunk
+		JsonObject dataChunk = (JsonObject) explanation.get(2);// getting second(image) explanation
+		assertEquals("data", dataChunk.get("type").getAsString());
+		assertEquals("singleData", dataChunk.get("subtype").getAsString());
+		assertEquals(dataValue, dataChunk.get("content").getAsString());
+		assertEquals(name, dataChunk.get("dimensionName").getAsString());
+		assertEquals(unit, dataChunk.get("dimensionUnit").getAsString());
+		
+    }
+
+    /**
+     * Test of generateJSONReport method, of class JEFFWizard.
+     * Test case: successful creation of the report
+     */
+    @Test
+    public void testGenerateJSONReport_Stream() throws FileNotFoundException, IOException {
+		// creates the stream where the report will be sent
+		PrintWriter stream = new PrintWriter(new File(filePathJSON));
+
+		// creates the object using the constructor with all values
+		simpleWizard = new JEFFWizard(owner, language, country, title, false);
+		// starting the building process
+		simpleWizard.createExplanation();
+
+		// adding explanation chunk
+		simpleWizard.addTextError(textContent);
+		simpleWizard.addImage(rule, imageContent);
+		simpleWizard.addDataPositive(group, rule, tags, dataContent);
+
+		// generates the report
+		simpleWizard.generateJSONReport(stream, true);
+
+		// checks if the file is created
+		assertTrue(new File(filePathJSON).exists());
+		// extract JsonObject from JSON file
+		Gson gson = new GsonBuilder().create();
+		FileReader reader = new FileReader(filePathJSON);
+		JsonObject jsObject = gson.fromJson(reader, JsonObject.class);
+
+		// checking for the explanation header elements
+		assertEquals(owner, jsObject.get("owner").getAsString());
+		assertEquals(language, jsObject.get("language").getAsString());
+		assertEquals(country, jsObject.get("country").getAsString());
+		assertEquals(DateFormat.getInstance().format(simpleWizard.getExplanation().getCreated()
+				.getTime()), jsObject.get("date").getAsString());
+		assertEquals(owner, jsObject.get("owner").getAsString());
+
+		// getting explanation array from JSON report
+		JsonArray explanation = jsObject.get("explanation").getAsJsonArray();
+		//checks the first explanation chunk		
+		JsonObject textChunk = (JsonObject) explanation.get(0);//getting first(textual) explanation
+		assertEquals("text", textChunk.get("type").getAsString());
+		assertEquals("error", textChunk.get("context").getAsString());
+		assertEquals(textContent, textChunk.get("content").getAsString());
+		
+		//checks the second explanation chunk
+		JsonObject imageChunk = (JsonObject) explanation.get(1);//getting second(image) explanation
+		assertEquals("image", imageChunk.get("type").getAsString());
+		assertEquals("informational", imageChunk.get("context").getAsString());
+		assertEquals(rule, imageChunk.get("rule").getAsString());
+		assertEquals(url, imageChunk.get("content").getAsString());
+		assertEquals(caption, imageChunk.get("caption").getAsString());
+
+		// checks the third explanation chunk
+		JsonObject dataChunk = (JsonObject) explanation.get(2);// getting second(image) explanation
+		assertEquals("data", dataChunk.get("type").getAsString());
+		assertEquals("singleData", dataChunk.get("subtype").getAsString());
+		assertEquals("positive", dataChunk.get("context").getAsString());
+		assertEquals(rule, dataChunk.get("rule").getAsString());
+		assertEquals(group, dataChunk.get("group").getAsString());
+		assertEquals(dataValue, dataChunk.get("content").getAsString());
+		assertEquals(name, dataChunk.get("dimensionName").getAsString());
+		assertEquals(unit, dataChunk.get("dimensionUnit").getAsString());
+		// checks the number of tags
+		JsonArray jsonTags = (JsonArray) dataChunk.get("tags");
+		assertEquals(2, jsonTags.size());
+
+		String[] tags = new String[jsonTags.size()];
+		for (int i = 0; i < jsonTags.size(); i++) {
+			tags[i] = jsonTags.get(i).getAsString();
+		}
+		// checks for tag names
+		assertEquals("tag1", tags[0]);
+		assertEquals("tag1", tags[0]);
+    }
+
+    /**
+     * Test of generateJSONReport method, of class JEFFWizard.
+     * Test case: successful creation of the report but with no chunk headers
+     */
+    @Test
+    public void testGenerateJSONReport_StreamNoChunkHeaders() throws FileNotFoundException, IOException {
+		// creates the stream where the report will be sent
+		PrintWriter stream = new PrintWriter(new File(filePathJSON));
+
+		// creates the object using the constructor with all values
+		simpleWizard = new JEFFWizard(owner, language, country, title, false);
+		// starting the building process
+		simpleWizard.createExplanation();
+
+		// adding explanation chunk
+		simpleWizard.addTextError(textContent);
+		simpleWizard.addImage(rule, imageContent);
+		simpleWizard.addDataPositive(group, rule, tags, dataContent);
+
+		// generates the report
+		simpleWizard.generateJSONReport(stream, true);
+
+		// checks if the file is created
+		assertTrue(new File(filePathJSON).exists());
+		// extract JsonObject from JSON file
+		Gson gson = new GsonBuilder().create();
+		FileReader reader = new FileReader(filePathJSON);
+		JsonObject jsObject = gson.fromJson(reader, JsonObject.class);
+
+		// checking for the explanation header elements
+		assertEquals(owner, jsObject.get("owner").getAsString());
+		assertEquals(language, jsObject.get("language").getAsString());
+		assertEquals(country, jsObject.get("country").getAsString());
+		assertEquals(DateFormat.getInstance().format(simpleWizard.getExplanation().getCreated().getTime()),
+				jsObject.get("date").getAsString());
+		assertEquals(owner, jsObject.get("owner").getAsString());
+
+		// getting explanation array from JSON report
+		JsonArray explanation = jsObject.get("explanation").getAsJsonArray();
+		// checks the first explanation chunk
+		JsonObject textChunk = (JsonObject) explanation.get(0);// getting
+																// first(textual)
+																// explanation
+		assertEquals("text", textChunk.get("type").getAsString());
+		assertEquals(textContent, textChunk.get("content").getAsString());
+
+		// checks the second explanation chunk
+		JsonObject imageChunk = (JsonObject) explanation.get(1);// getting
+																// second(image)
+																// explanation
+		assertEquals("image", imageChunk.get("type").getAsString());
+		assertEquals(url, imageChunk.get("content").getAsString());
+		assertEquals(caption, imageChunk.get("caption").getAsString());
+
+		// checks the third explanation chunk
+		JsonObject dataChunk = (JsonObject) explanation.get(2);// getting
+																// second(image)
+																// explanation
+		assertEquals("data", dataChunk.get("type").getAsString());
+		assertEquals("singleData", dataChunk.get("subtype").getAsString());
+		assertEquals(dataValue, dataChunk.get("content").getAsString());
+		assertEquals(name, dataChunk.get("dimensionName").getAsString());
+		assertEquals(unit, dataChunk.get("dimensionUnit").getAsString());
+    }
 }
